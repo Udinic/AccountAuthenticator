@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AccountAuthenticator</string>
+    <string name="label">Udinic Label</string>
+    <string name="title_fmt">Udinic Prefs</string>
+    <string name="key1_action">setting1</string>
+    <string name="key1_summary">This is where we set setting1</string>
+    <string name="signup_title">Create new account</string>
+    <string name="login_label">Log in</string>
+</resources>

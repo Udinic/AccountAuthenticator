@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="#000000"
+              android:paddingLeft="17dp"
+              android:paddingRight="17dp"
+        >
+
+    <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Name"
+            android:inputType="text"
+            android:padding="10dp"
+            />
+
+    <EditText
+            android:id="@+id/accountName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Email address"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            />
+
+    <EditText
+            android:id="@+id/accountPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword"
+            android:hint="Password"
+            android:padding="10dp"
+            />
+
+    <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Create Account"
+            android:padding="10dp"/>
+
+    <TextView android:id="@+id/alreadyMember"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:padding="5dp"
+              android:gravity="center"
+              android:text="Already a member?"/>
+</LinearLayout>
+
