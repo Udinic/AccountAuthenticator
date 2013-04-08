@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ExampleApp</string>
+    <string name="per_desc">Udini is the man</string>
+    <string name="per_label">udini per</string>
+    <string name="perm_group_name">Udinic Perms</string>
+</resources>
