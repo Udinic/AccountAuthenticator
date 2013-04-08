@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.udinic.accounts_auth_example"
+          package="com.udinic.accounts_authenticator_example"
           android:versionCode="1"
           android:versionName="1.0">
 
@@ -8,16 +8,8 @@
     <application
             android:label="@string/app_name"
             android:icon="@drawable/ic_launcher">
-        <activity
-                android:name=".Main"
-                android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".authentication.AuthenticatorActivity" android:label="@string/login_label"/>
-        <activity android:name=".authentication.SignUpActivity" android:label="@string/signup_title"/>
+        <activity android:name=".authentication.AuthenticatorActivity" android:label="@string/login_label" />
+        <activity android:name=".authentication.SignUpActivity" android:label="@string/signup_title" />
 
         <service android:name=".authentication.UdinicAuthenticatorService">
             <intent-filter>
@@ -29,13 +21,13 @@
 
     </application>
 
+    <!--<permission android:name="com.udinic.permission"/>-->
 
-    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Authenticator -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <!--<permission-group android:name="com.udinic.permission_group" android:label="@string/perm_group_name"/>-->
+    <!--<permission android:name="com.udinic.permission" android:permissionGroup="com.udinic.permission_group" android:description="@string/per_desc" android:label="@string/per_label" android:protectionLevel="dangerous"/>-->
+    <!--<uses-permission android:name="com.udinic.permission"/>-->
 
-    <!-- client -->
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
 </manifest>

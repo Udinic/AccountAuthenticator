@@ -7,4 +7,7 @@
     <string name="key1_summary">This is where we set setting1</string>
     <string name="signup_title">Create new account</string>
     <string name="login_label">Log in</string>
+    <string name="perm_group_name">Udini group ser</string>
+    <string name="per_desc">perm desc ser</string>
+    <string name="per_label">perm lab ser</string>
 </resources>

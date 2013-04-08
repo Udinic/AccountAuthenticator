@@ -1,4 +1,4 @@
-package com.udinic.accounts_auth_example;
+package com.udinic.accounts_authenticator_example;
 
 import android.accounts.*;
 import android.app.Activity;
@@ -9,7 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-import com.udinic.accounts_auth_example.authentication.AccountGeneral;
+import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
+import com.udinic.accounts_example.R;
 
 import java.io.IOException;
 
@@ -29,17 +30,17 @@ public class Main extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
+        setContentView(com.udinic.accounts_example.R.layout.main);
         mAccountManager = AccountManager.get(this);
 
-        findViewById(R.id.btnAddAccount).setOnClickListener(new View.OnClickListener() {
+        findViewById(com.udinic.accounts_example.R.id.btnAddAccount).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
 
-        findViewById(R.id.btnGetAuthToken).setOnClickListener(new View.OnClickListener() {
+        findViewById(com.udinic.accounts_example.R.id.btnGetAuthToken).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAccountPicker(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
