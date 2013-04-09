@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/title_fmt" />
-    <PreferenceScreen
-            android:key="key1"
-            android:title="@string/key1_action"
-            android:summary="@string/key1_summary">
-        <intent
-                android:action="key1.ACTION"
-                android:targetPackage="key1.package"
-                android:targetClass="key1.class" />
-    </PreferenceScreen>
+    <PreferenceCategory android:title="Udinic Preferences" />
+    <CheckBoxPreference android:title="Use debug server" android:key="isDebug" android:summary="Connecting to a debug server instead of prod server"/>
+    <SwitchPreference android:title="Debug Logs" android:key="logsVerbose" android:summary="Show debug logs on LogCat"/>
 </PreferenceScreen>

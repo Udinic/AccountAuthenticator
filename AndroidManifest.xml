@@ -21,13 +21,7 @@
 
     </application>
 
-    <!--<permission android:name="com.udinic.permission"/>-->
-
     <!-- Authenticator -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <!--<permission-group android:name="com.udinic.permission_group" android:label="@string/perm_group_name"/>-->
-    <!--<permission android:name="com.udinic.permission" android:permissionGroup="com.udinic.permission_group" android:description="@string/per_desc" android:label="@string/per_label" android:protectionLevel="dangerous"/>-->
-    <!--<uses-permission android:name="com.udinic.permission"/>-->
-
 </manifest>

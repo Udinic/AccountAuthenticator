@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
+import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,8 +94,12 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public String getAuthTokenLabel(String authTokenType) {
-        return authTokenType + " (Label)";
-//        return (authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY) ? "auth1 label: ": "auth2 label")+ authTokenType;
+        if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
+            return AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+        else if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
+            return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+        else
+            return authTokenType + " (Label)";
     }
 
     @Override
