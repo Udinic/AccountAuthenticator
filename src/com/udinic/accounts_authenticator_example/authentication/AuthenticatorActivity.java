@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.udinic.accounts_authenticator_example.R;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
@@ -87,18 +88,27 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 String authtoken = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
 
-                final Intent res = new Intent();
-                res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
-                res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                res.putExtra(AccountManager.KEY_AUTHTOKEN, authtoken);
-                res.putExtra(PARAM_USER_PASS, userPass);
+                if (authtoken == null)
+                    return null;
+                else {
+                    final Intent res = new Intent();
+                    res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
+                    res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                    res.putExtra(AccountManager.KEY_AUTHTOKEN, authtoken);
+                    res.putExtra(PARAM_USER_PASS, userPass);
 
-                return res;
+                    return res;
+                }
             }
 
             @Override
             protected void onPostExecute(Intent intent) {
-                finishLogin(intent);
+                if (intent != null) {
+                    finishLogin(intent);
+                } else {
+                    Toast.makeText(getBaseContext(), "Wrong credentials", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
         }.execute();
     }

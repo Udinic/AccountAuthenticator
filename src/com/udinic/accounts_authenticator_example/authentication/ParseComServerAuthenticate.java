@@ -107,7 +107,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
             e.printStackTrace();
         }
 
-        return "55"+authtoken;
+        return authtoken;
     }
 
     private class User implements Serializable {
