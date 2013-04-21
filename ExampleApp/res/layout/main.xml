@@ -24,4 +24,10 @@
             android:padding="10dp"
             android:text="Get Auth Token convenient"/>
 
+    <Button android:id="@+id/btnInvalidateAuthToken"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="InvalidateAuthToken"/>
+
 </LinearLayout>

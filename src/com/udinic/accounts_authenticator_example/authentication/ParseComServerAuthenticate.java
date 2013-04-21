@@ -1,5 +1,6 @@
 package com.udinic.accounts_authenticator_example.authentication;
 
+import android.util.Log;
 import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -61,6 +62,8 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
     @Override
     public String userSignIn(String user, String pass, String authType) {
 
+        Log.d("udini", "userSignIn");
+
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String url = "https://api.parse.com/1/login";
 
@@ -104,7 +107,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
             e.printStackTrace();
         }
 
-        return authtoken;
+        return "55"+authtoken;
     }
 
     private class User implements Serializable {

@@ -62,6 +62,8 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
+        Log.d(TAG, "authtoken - " + authToken);
+
         // Lets give another try to authenticate the user
         if (TextUtils.isEmpty(authToken)) {
             final String password = am.getPassword(account);
