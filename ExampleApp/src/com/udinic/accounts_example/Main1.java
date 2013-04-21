@@ -1,4 +1,4 @@
-package com.udinic.accounts_example2;
+package com.udinic.accounts_example;
 
 import android.accounts.*;
 import android.app.Activity;
@@ -13,13 +13,15 @@ import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
 
 import java.io.IOException;
 
+import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Udini
  * Date: 21/03/13
  * Time: 13:50
  */
-public class Main extends Activity {
+public class Main1 extends Activity {
 
     private String TAG = this.getClass().getSimpleName();
     private android.os.Handler mHandler = new android.os.Handler();
@@ -42,7 +44,7 @@ public class Main extends Activity {
         findViewById(R.id.btnGetAuthToken).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAccountPicker(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, false);
             }
         });
 
@@ -52,6 +54,14 @@ public class Main extends Activity {
                 getTokenForAccountCreateIfNeeded(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
+        findViewById(R.id.btnInvalidateAuthToken).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Dsds");
+                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);
+            }
+        });
+
     }
 
     /**
@@ -90,7 +100,7 @@ public class Main extends Activity {
      * Show all the accounts registered on the account manager. Request an auth token upon user select.
      * @param authTokenType
      */
-    private void showAccountPicker(final String authTokenType) {
+    private void showAccountPicker(final String authTokenType, final boolean invalidate) {
 
         final Account availableAccounts[] = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
@@ -106,7 +116,10 @@ public class Main extends Activity {
             new AlertDialog.Builder(this).setTitle("Pick Account").setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, name), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    getExistingAccountAuthToken(availableAccounts[which], authTokenType);
+                    if(invalidate)
+                        invalidateAuthToken(availableAccounts[which], authTokenType);
+                    else
+                        getExistingAccountAuthToken(availableAccounts[which], authTokenType);
                 }
             }).show();
         }
@@ -132,6 +145,38 @@ public class Main extends Activity {
                         public void run() {
                             //To change body of implemented methods use File | Settings | File Templates.
                             Toast.makeText(getBaseContext(), ((authtoken != null) ? "SUCCESS!" : "FAIL"), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Log.d("udini", "GetToken Bundle is " + bnd);
+                } catch (OperationCanceledException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+    }
+
+    private void invalidateAuthToken(final Account account, String authTokenType) {
+        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null,null);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Bundle bnd = future.getResult();
+
+                    final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //To change body of implemented methods use File | Settings | File Templates.
+                            mAccountManager.invalidateAuthToken(account.type, authtoken);
+
+                            Toast.makeText(getBaseContext(), "dsd", Toast.LENGTH_SHORT).show();
                         }
                     });
                     Log.d("udini", "GetToken Bundle is " + bnd);
