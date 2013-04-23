@@ -170,13 +170,11 @@ public class Main1 extends Activity {
                     Bundle bnd = future.getResult();
 
                     final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
+                    mAccountManager.invalidateAuthToken(account.type, authtoken);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                            mAccountManager.invalidateAuthToken(account.type, authtoken);
-
-                            Toast.makeText(getBaseContext(), "dsd", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), account.name + " invalidated", Toast.LENGTH_SHORT).show();
                         }
                     });
                     Log.d("udini", "GetToken Bundle is " + bnd);

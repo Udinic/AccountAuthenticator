@@ -42,11 +42,13 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         String authtoken = null;
         try {
             HttpResponse response = httpClient.execute(httpPost);
-
-            if (response.getStatusLine().getStatusCode() != 201)
-                throw new Exception("User not created");
-
             String responseString = EntityUtils.toString(response.getEntity());
+
+            if (response.getStatusLine().getStatusCode() != 201) {
+                ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
+                throw new Exception("Error creating user["+error.code+"] - " + error.error);
+            }
+
 
             User createdUser = new Gson().fromJson(responseString, User.class);
 
@@ -60,7 +62,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
     }
 
     @Override
-    public String userSignIn(String user, String pass, String authType) {
+    public String userSignIn(String user, String pass, String authType) throws Exception {
 
         Log.d("udini", "userSignIn");
 
@@ -74,14 +76,8 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-//        String queryEnc = URLEncodedUtils.format(query, "utf-8");
         url += "?" + query;
 
-//        try {
-//            url = ;
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
         HttpGet httpGet = new HttpGet(url);
 
         httpGet.addHeader("X-Parse-Application-Id", "XUafJTkPikD5XN5HxciweVuSe12gDgk2tzMltOhr");
@@ -97,11 +93,14 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         try {
             HttpResponse response = httpClient.execute(httpGet);
 
-            if (response.getStatusLine().getStatusCode() == 200) {
-                String responseString = EntityUtils.toString(response.getEntity());
-                User loggedUser = new Gson().fromJson(responseString, User.class);
-                authtoken = loggedUser.sessionToken;
+            String responseString = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() != 200) {
+                ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
+                throw new Exception("Error signing-in ["+error.code+"] - " + error.error);
             }
+
+            User loggedUser = new Gson().fromJson(responseString, User.class);
+            authtoken = loggedUser.sessionToken;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -110,6 +109,10 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         return authtoken;
     }
 
+    private class ParseComError implements Serializable {
+        int code;
+        String error;
+    }
     private class User implements Serializable {
 
         private String firstName;

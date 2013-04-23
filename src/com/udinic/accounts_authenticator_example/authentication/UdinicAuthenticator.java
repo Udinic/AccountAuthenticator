@@ -68,7 +68,11 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
         if (TextUtils.isEmpty(authToken)) {
             final String password = am.getPassword(account);
             if (password != null) {
-                authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                try {
+                    authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 

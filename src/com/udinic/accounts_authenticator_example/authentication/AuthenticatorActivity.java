@@ -21,6 +21,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
 
+    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
+
     public final static String PARAM_USER_PASS = "USER_PASS";
 
     private final int REQ_SIGNUP = 1;
@@ -86,28 +88,31 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 Log.d("udini", TAG + "> Started authenticating");
 
-                String authtoken = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
+                String authtoken = null;
+                Bundle data = new Bundle();
+                try {
+                    authtoken = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
 
-                if (authtoken == null)
-                    return null;
-                else {
-                    final Intent res = new Intent();
-                    res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
-                    res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                    res.putExtra(AccountManager.KEY_AUTHTOKEN, authtoken);
-                    res.putExtra(PARAM_USER_PASS, userPass);
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                    data.putString(PARAM_USER_PASS, userPass);
 
-                    return res;
+                } catch (Exception e) {
+                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                 }
+
+                final Intent res = new Intent();
+                res.putExtras(data);
+                return res;
             }
 
             @Override
             protected void onPostExecute(Intent intent) {
-                if (intent != null) {
-                    finishLogin(intent);
+                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                    Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getBaseContext(), "Wrong credentials", Toast.LENGTH_SHORT).show();
-                    finish();
+                    finishLogin(intent);
                 }
             }
         }.execute();

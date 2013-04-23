@@ -13,7 +13,6 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="20dp"
               android:hint="Email address"
-              android:text="uuu2@ggg.com"
               android:inputType="textEmailAddress"
               android:padding="10dp"
             />
@@ -24,7 +23,6 @@
               android:layout_marginTop="10dp"
               android:inputType="textPassword"
               android:hint="Password"
-              android:text="qwerty"
               android:padding="10dp"
             />
 
@@ -32,7 +30,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="10dp"
-              android:text="connect"
+              android:text="Sign in"
               android:padding="10dp"/>
 
     <TextView android:id="@+id/signUp"
