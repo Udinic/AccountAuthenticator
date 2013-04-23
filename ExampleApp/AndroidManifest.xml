@@ -15,16 +15,16 @@
             </intent-filter>
         </activity>
 
-        <!-- Authenticator shit -->
-        <activity android:name="com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity" android:label="@string/login_label" android:exported="true"/>
-        <activity android:name="com.udinic.accounts_authenticator_example.authentication.SignUpActivity" android:label="@string/signup_title" android:exported="true"/>
-<service android:name="com.udinic.accounts_authenticator_example.authentication.UdinicAuthenticatorService">
-    <intent-filter>
-        <action android:name="android.accounts.AccountAuthenticator" />
-    </intent-filter>
-    <meta-data android:name="android.accounts.AccountAuthenticator"
-               android:resource="@xml/authenticator" />
-</service>
+        <!-- Authenticator shit needs to be declared here in order for the app to recognize it-->
+        <activity android:name="com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity" android:label="@string/login_label"/>
+        <activity android:name="com.udinic.accounts_authenticator_example.authentication.SignUpActivity" android:label="@string/signup_title"/>
+        <service android:name="com.udinic.accounts_authenticator_example.authentication.UdinicAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                       android:resource="@xml/authenticator" />
+        </service>
 
     </application>
 
