@@ -59,6 +59,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
+                // and return them in setAccountAuthenticatorResult(). See finishLogin().
                 Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
                 signup.putExtras(getIntent().getExtras());
                 startActivityForResult(signup, REQ_SIGNUP);
@@ -68,6 +70,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // The sign up activity returned that the user has successfully created an account
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
             finishLogin(data);
         } else
