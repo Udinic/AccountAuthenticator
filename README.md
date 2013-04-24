@@ -3,6 +3,10 @@ Authenticator Sample App
 
 A sample app to demonstrate some of Android Authenticator's abilities.
 
+![screenshots](https://raw.github.com/Udinic/AccountAuthenticator/master/screenshots/accounts.png)
+
+![screenshots](https://raw.github.com/Udinic/AccountAuthenticator/master/screenshots/sampleapp.png)
+
 This subject and source code is explained in my blog post at http://www.udinic.com
 
 
