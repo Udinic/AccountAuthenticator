@@ -4,10 +4,10 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
     <application
             android:label="@string/app_name"
-            android:icon="@drawable/ic_launcher">
+            android:icon="@drawable/ic_udinic">
         <activity android:name=".Main2">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -15,9 +15,9 @@
             </intent-filter>
         </activity>
 
-        <!-- Authenticator shit -->
-        <activity android:name="com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity" android:label="@string/login_label" android:exported="true"/>
-        <activity android:name="com.udinic.accounts_authenticator_example.authentication.SignUpActivity" android:label="@string/signup_title" android:exported="true"/>
+        <!-- Authenticator related activities and service needs to be declared here in order for the app to recognize them-->
+        <activity android:name="com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity" android:label="@string/login_label"/>
+        <activity android:name="com.udinic.accounts_authenticator_example.authentication.SignUpActivity" android:label="@string/signup_title"/>
         <service android:name="com.udinic.accounts_authenticator_example.authentication.UdinicAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -32,12 +32,9 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <!--<uses-permission android:name="com.udinic.permission"/>-->
 
     <!-- Authenticator -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <!--<permission android:name="com.udinic.permission"/>-->
-    <!--<uses-permission android:name="com.udinic.permission"/>-->
 
 </manifest>

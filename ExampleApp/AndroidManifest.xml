@@ -4,10 +4,10 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
     <application
             android:label="@string/app_name"
-            android:icon="@drawable/ic_launcher">
+            android:icon="@drawable/ic_udinic">
         <activity android:name=".Main1">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -15,7 +15,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Authenticator shit needs to be declared here in order for the app to recognize it-->
+        <!-- Authenticator related activities and service needs to be declared here in order for the app to recognize them-->
         <activity android:name="com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity" android:label="@string/login_label"/>
         <activity android:name="com.udinic.accounts_authenticator_example.authentication.SignUpActivity" android:label="@string/signup_title"/>
         <service android:name="com.udinic.accounts_authenticator_example.authentication.UdinicAuthenticatorService">
@@ -36,9 +36,5 @@
     <!-- Authenticator -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-
-    <permission-group android:name="com.udinic.permission_group" android:label="@string/perm_group_name"/>
-    <permission android:name="com.udinic.permission" android:permissionGroup="com.udinic.permission_group" android:description="@string/per_desc" android:label="@string/per_label" android:protectionLevel="dangerous"/>
-    <!--<uses-permission android:name="com.udinic.permission"/>-->
 
 </manifest>

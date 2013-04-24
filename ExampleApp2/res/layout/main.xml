@@ -10,25 +10,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Add Account"/>
+            android:text="addAccount"/>
 
     <Button android:id="@+id/btnGetAuthToken"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Get Auth token"/>
+            android:text="getAuthToken"/>
 
     <Button android:id="@+id/btnGetAuthTokenConvenient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Get Auth Token convenient"/>
+            android:text="getAuthTokenByFeatures"/>
 
     <Button android:id="@+id/btnInvalidateAuthToken"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="InvalidateAuthToken"/>
-
+            android:text="invalidateAuthToken"/>
 
 </LinearLayout>

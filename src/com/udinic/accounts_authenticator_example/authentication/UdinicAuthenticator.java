@@ -30,7 +30,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
-        Log.d(TAG, "addAccount");
+        Log.d("udinic", TAG + "> addAccount");
 
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
@@ -46,7 +46,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
 
-        Log.d(TAG, "getAuthToken");
+        Log.d("udinic", TAG + "> getAuthToken");
 
         // If the caller requested an authToken type we don't support, then
         // return an error
@@ -62,13 +62,14 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
-        Log.d(TAG, "authtoken - " + authToken);
+        Log.d("udinic", TAG + "> peekAuthToken returned - " + authToken);
 
         // Lets give another try to authenticate the user
         if (TextUtils.isEmpty(authToken)) {
             final String password = am.getPassword(account);
             if (password != null) {
                 try {
+                    Log.d("udinic", TAG + "> re-authenticating with the existing password");
                     authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -4,10 +4,12 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
     <application
             android:label="@string/app_name"
             android:icon="@drawable/ic_udinic">
+
+        <!-- *** Not really needed here, but convenient for copying to other apps that will use this module *** -->
         <activity android:name=".authentication.AuthenticatorActivity" android:label="@string/login_label"/>
         <activity android:name=".authentication.SignUpActivity" android:label="@string/signup_title" />
 
@@ -21,7 +23,7 @@
 
     </application>
 
-    <!-- Authenticator -->
+    <!-- *** Not really needed here, but convenient for copying to other apps that will use this module *** -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 </manifest>

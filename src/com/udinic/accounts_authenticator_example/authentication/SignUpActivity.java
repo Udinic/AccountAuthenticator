@@ -17,11 +17,11 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
 import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.PARAM_USER_PASS;
 
 /**
- * Created with IntelliJ IDEA.
+ * In charge of the Sign up process. Since it's not an AuthenticatorActivity decendent,
+ * it returns the result back to the calling activity, which is an AuthenticatorActivity,
+ * and it return the result back to the Authenticator
+ *
  * User: udinic
- * Date: 3/25/13
- * Time: 1:13 AM
- * To change this template use File | Settings | File Templates.
  */
 public class SignUpActivity extends Activity {
 
@@ -36,6 +36,13 @@ public class SignUpActivity extends Activity {
 
         setContentView(R.layout.act_register);
 
+        findViewById(R.id.alreadyMember).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
         findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +64,7 @@ public class SignUpActivity extends Activity {
             @Override
             protected Intent doInBackground(String... params) {
 
-                Log.d("udini", TAG + "> Started authenticating");
+                Log.d("udinic", TAG + "> Started authenticating");
 
                 String authtoken = null;
                 Bundle data = new Bundle();

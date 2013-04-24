@@ -14,6 +14,13 @@ import com.udinic.accounts_authenticator_example.R;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
 
+/**
+ * The Authenticator activity.
+ *
+ * Called by the Authenticator and in charge of identifing the user.
+ *
+ * It sends back to the Authenticator the result.
+ */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -90,7 +97,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             protected Intent doInBackground(String... params) {
 
-                Log.d("udini", TAG + "> Started authenticating");
+                Log.d("udinic", TAG + "> Started authenticating");
 
                 String authtoken = null;
                 Bundle data = new Bundle();
@@ -123,14 +130,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void finishLogin(Intent intent) {
-        Log.d("udini", TAG + "> finishLogin");
+        Log.d("udinic", TAG + "> finishLogin");
 
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d("udini", TAG + "> finishLogin > addAccountExplicitly");
+            Log.d("udinic", TAG + "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
@@ -139,7 +146,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
         } else {
-            Log.d("udini", TAG + "> finishLogin > setPassword");
+            Log.d("udinic", TAG + "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
 

@@ -24,7 +24,6 @@ import static com.udinic.accounts_authenticator_example.authentication.AccountGe
 public class Main2 extends Activity {
 
     private String TAG = this.getClass().getSimpleName();
-    private android.os.Handler mHandler = new android.os.Handler();
     private AccountManager mAccountManager;
 
     @Override
@@ -57,7 +56,6 @@ public class Main2 extends Activity {
         findViewById(R.id.btnInvalidateAuthToken).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Dsds");
                 showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);
             }
         });
@@ -75,22 +73,12 @@ public class Main2 extends Activity {
             public void run(AccountManagerFuture<Bundle> future) {
                 try {
                     Bundle bnd = future.getResult();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                            Toast.makeText(getBaseContext(), "Account was created", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    showMessage("Account was created");
+                    Log.d("udinic", "AddNewAccount Bundle is " + bnd);
 
-                    Log.d("udini", "AddNewAccount Bundle is " + bnd);
-
-                } catch (OperationCanceledException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AuthenticatorException e) {
-                    e.printStackTrace();
+                    showMessage(e.getMessage());
                 }
             }
         }, null);
@@ -131,7 +119,7 @@ public class Main2 extends Activity {
      * @param authTokenType
      */
     private void getExistingAccountAuthToken(Account account, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null,null);
+        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null, null);
 
         new Thread(new Runnable() {
             @Override
@@ -140,26 +128,21 @@ public class Main2 extends Activity {
                     Bundle bnd = future.getResult();
 
                     final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                            Toast.makeText(getBaseContext(), ((authtoken != null) ? "SUCCESS!" : "FAIL"), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Log.d("udini", "GetToken Bundle is " + bnd);
-                } catch (OperationCanceledException e) {
+                    showMessage((authtoken != null) ? "SUCCESS!\ntoken: " + authtoken : "FAIL");
+                    Log.d("udinic", "GetToken Bundle is " + bnd);
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AuthenticatorException e) {
-                    e.printStackTrace();
+                    showMessage(e.getMessage());
                 }
-
             }
         }).start();
     }
 
+    /**
+     * Invalidates the auth token for the account
+     * @param account
+     * @param authTokenType
+     */
     private void invalidateAuthToken(final Account account, String authTokenType) {
         final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null,null);
 
@@ -170,24 +153,12 @@ public class Main2 extends Activity {
                     Bundle bnd = future.getResult();
 
                     final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                            mAccountManager.invalidateAuthToken(account.name, authtoken);
-
-                            Toast.makeText(getBaseContext(), "dsd", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Log.d("udini", "GetToken Bundle is " + bnd);
-                } catch (OperationCanceledException e) {
+                    mAccountManager.invalidateAuthToken(account.type, authtoken);
+                    showMessage(account.name + " invalidated");
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AuthenticatorException e) {
-                    e.printStackTrace();
+                    showMessage(e.getMessage());
                 }
-
             }
         }).start();
     }
@@ -209,24 +180,27 @@ public class Main2 extends Activity {
                         try {
                             bnd = future.getResult();
                             final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //To change body of implemented methods use File | Settings | File Templates.
-                                    Toast.makeText(getBaseContext(), ((authtoken != null) ? "SUCCESS!" : "FAIL"), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            Log.d("udini", "GetTokenForAccount Bundle is " + bnd);
+                            showMessage(((authtoken != null) ? "SUCCESS!\ntoken: " + authtoken : "FAIL"));
+                            Log.d("udinic", "GetTokenForAccount Bundle is " + bnd);
 
-                        } catch (OperationCanceledException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (AuthenticatorException e) {
-                            e.printStackTrace();
+                            showMessage(e.getMessage());
                         }
                     }
                 }
-        , null);
+                , null);
+    }
+
+    private void showMessage(final String msg) {
+        if (msg == null || msg.trim().equals(""))
+            return;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
