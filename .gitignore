@@ -1,6 +1,6 @@
-/bin
-/gen
-/out
+bin/
+gen/
+out/
 .idea/workspace.xml
 
 *.iws
@@ -17,4 +17,20 @@
 /**/classes
 /**/gen/
 /**/out/
-	
+
+# Proguard
+proguard/
+
+# Eclipse
+.classpath
+.settings
+
+# Local properties
+local.properties
+
+# dex file
+.dex
+
+# Application file
+.apk
+.ap_
