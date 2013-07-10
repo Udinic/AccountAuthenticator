@@ -93,6 +93,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, account.type);
         intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.name);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;
