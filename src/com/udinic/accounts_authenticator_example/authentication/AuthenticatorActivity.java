@@ -1,8 +1,9 @@
 package com.udinic.accounts_authenticator_example.authentication;
 
 import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.accounts.AccountAuthenticatorResponse;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import static com.udinic.accounts_authenticator_example.authentication.AccountGe
  *
  * It sends back to the Authenticator the result.
  */
-public class AuthenticatorActivity extends AccountAuthenticatorActivity {
+public class AuthenticatorActivity extends Activity {
 
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
@@ -36,8 +37,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
     private AccountManager mAccountManager;
     private String mAuthTokenType;
+    private Bundle mResultBundle = null;
 
     /**
      * Called when the activity is first created.
@@ -45,6 +48,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAccountAuthenticatorResponse = getIntent().getParcelableExtra( AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE );
+        if( mAccountAuthenticatorResponse != null ) {
+            mAccountAuthenticatorResponse.onRequestContinued();
+        } 
         setContentView(R.layout.act_login);
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -154,5 +161,22 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+
+    public final void setAccountAuthenticatorResult( Bundle result ) {
+        mResultBundle = result;
+    }
+
+    public void finish() {
+        if( mAccountAuthenticatorResponse != null ) {
+           // send the result bundle back if set, otherwise send an error.
+           if( mResultBundle != null ) {
+              mAccountAuthenticatorResponse.onResult( mResultBundle );
+           } else {
+              mAccountAuthenticatorResponse.onError( AccountManager.ERROR_CODE_CANCELED, "canceled" );
+           }
+           mAccountAuthenticatorResponse = null;
+       }
+       super.finish();
+   }     
 
 }
