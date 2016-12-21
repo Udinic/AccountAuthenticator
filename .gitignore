@@ -1,6 +1,7 @@
 bin/
 gen/
 out/
+build/
 .idea/workspace.xml
 
 *.iws
@@ -12,6 +13,7 @@ out/
 /*/target
 .project
 .idea/
+.gradle/
 /**/target
 
 /**/classes
