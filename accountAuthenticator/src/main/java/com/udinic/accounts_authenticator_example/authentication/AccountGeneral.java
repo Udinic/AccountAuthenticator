@@ -19,16 +19,6 @@ package com.udinic.accounts_authenticator_example.authentication;
 public class AccountGeneral {
 
     /**
-     * Account type id
-     */
-    public static final String ACCOUNT_TYPE = "com.udinic.auth_example";
-
-    /**
-     * Account name
-     */
-    public static final String ACCOUNT_NAME = "Udinic";
-
-    /**
      * Auth token types
      */
     public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";

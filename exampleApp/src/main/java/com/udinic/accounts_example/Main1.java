@@ -44,6 +44,7 @@ public class Main1 extends Activity {
     private AlertDialog mAlertDialog;
     private boolean mInvalidate;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class Main1 extends Activity {
         findViewById(R.id.btnAddAccount).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                addNewAccount(getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
 
@@ -68,7 +69,7 @@ public class Main1 extends Activity {
         findViewById(R.id.btnGetAuthTokenConvenient).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTokenForAccountCreateIfNeeded(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                getTokenForAccountCreateIfNeeded(getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
         findViewById(R.id.btnInvalidateAuthToken).setOnClickListener(new View.OnClickListener() {
@@ -95,6 +96,10 @@ public class Main1 extends Activity {
             outState.putBoolean(STATE_DIALOG, true);
             outState.putBoolean(STATE_INVALIDATE, mInvalidate);
         }
+    }
+
+    public String getAccountType() {
+        return getString(R.string.account_type);
     }
 
     /**
@@ -126,8 +131,8 @@ public class Main1 extends Activity {
      * @param authTokenType
      */
     private void showAccountPicker(final String authTokenType, final boolean invalidate) {
-        mInvalidate = invalidate;
-        final Account availableAccounts[] = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+    	mInvalidate = invalidate;
+        final Account availableAccounts[] = mAccountManager.getAccountsByType(getAccountType());
 
         if (availableAccounts.length == 0) {
             Toast.makeText(this, "No accounts", Toast.LENGTH_SHORT).show();

@@ -16,76 +16,100 @@
 
 package com.udinic.accounts_authenticator_example.authentication;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.udinic.accounts_authenticator_example.R;
 
+import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
+import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
+import static android.accounts.AccountManager.KEY_AUTHTOKEN;
+import static android.accounts.AccountManager.KEY_PASSWORD;
+import static android.accounts.AccountManager.KEY_ERROR_MESSAGE;
+
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
-import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.ARG_ACCOUNT_TYPE;
-import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.KEY_ERROR_MESSAGE;
-import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.PARAM_USER_PASS;
 
 /**
  * In charge of the Sign up process. Since it's not an AuthenticatorActivity decendent,
  * it returns the result back to the calling activity, which is an AuthenticatorActivity,
  * and it return the result back to the Authenticator
  */
-public class SignUpActivity extends Activity {
+public class SignUpActivity extends Activity implements OnClickListener {
 
-    private String TAG = getClass().getSimpleName();
+    public static final String TAG = SignUpActivity.class.getSimpleName();
+
+    private TextView mAccountNameTextView;
+    private TextView mAlreadyMemberTextView;
+    private TextView mNameTextView;
+    private TextView mPasswordTextView;
+    private Button mSignUpButton;
+
     private String mAccountType;
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mAccountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-
         setContentView(R.layout.act_register);
 
-        findViewById(R.id.alreadyMember).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
-        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAccount();
-            }
-        });
+        mAlreadyMemberTextView = (TextView) findViewById(R.id.already_member);
+        mAccountNameTextView = (TextView) findViewById(R.id.account_name);
+        mNameTextView = (TextView) findViewById(R.id.name);
+        mPasswordTextView = (TextView) findViewById(R.id.account_password);
+        mSignUpButton = (Button) findViewById(R.id.sign_up);
+
+        mAlreadyMemberTextView.setOnClickListener(this);
+        mSignUpButton.setOnClickListener(this);
+
+        mAccountType = getIntent().getStringExtra(KEY_ACCOUNT_TYPE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.already_member) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
+
+        if (view.getId() == R.id.sign_up) {
+            createAccount();
+            return;
+        }
     }
 
     private void createAccount() {
         new AsyncTask<String, Void, Intent>() {
 
-            String name = ((TextView) findViewById(R.id.name)).getText().toString().trim();
-            String accountName = ((TextView) findViewById(R.id.accountName)).getText().toString().trim();
-            String accountPassword = ((TextView) findViewById(R.id.accountPassword)).getText().toString().trim();
+            String name = mNameTextView.getText().toString().trim();
+            String accountName = mAccountNameTextView.getText().toString().trim();
+            String accountPassword = mPasswordTextView.getText().toString().trim();
 
             @Override
             protected Intent doInBackground(String... params) {
 
                 Log.d(TAG, "> Started authenticating");
 
-                String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = sServerAuthenticate.userSignUp(name, accountName, accountPassword);
+                    String authToken = sServerAuthenticate.userSignUp(name, accountName, accountPassword);
 
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
-                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
-                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                    data.putString(PARAM_USER_PASS, accountPassword);
+                    data.putString(KEY_ACCOUNT_NAME, accountName);
+                    data.putString(KEY_ACCOUNT_TYPE, mAccountType);
+                    data.putString(KEY_AUTHTOKEN, authToken);
+                    data.putString(KEY_PASSWORD, accountPassword);
                 } catch (Exception e) {
                     data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                 }
@@ -105,12 +129,6 @@ public class SignUpActivity extends Activity {
                 }
             }
         }.execute();
-    }
-
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_CANCELED);
-        super.onBackPressed();
     }
 
 }
