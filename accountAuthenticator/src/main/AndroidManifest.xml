@@ -11,7 +11,7 @@
 
         <!-- *** Not really needed here, but convenient for copying to other apps that will use this module *** -->
         <activity android:name=".authentication.AuthenticatorActivity" android:label="@string/login_label"/>
-        <activity android:name=".authentication.SignUpActivity" android:label="@string/signup_title" />
+        <activity android:name=".authentication.signup.SignUpActivity" android:label="@string/signup_title" />
 
         <service android:name=".authentication.UdinicAuthenticatorService">
             <intent-filter>

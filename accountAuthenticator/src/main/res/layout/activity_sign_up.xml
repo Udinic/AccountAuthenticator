@@ -58,7 +58,7 @@
         android:text="Create Account" />
 
     <TextView
-        android:id="@+id/already_member"
+        android:id="@+id/sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

@@ -28,6 +28,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.udinic.accounts_authenticator_example.R;
+import com.udinic.accounts_authenticator_example.authentication.signup.SignUpActivity;
 
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
