@@ -10,12 +10,6 @@ import android.util.Log;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Udini
- * Date: 19/03/13
- * Time: 18:58
- */
 public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
     private String TAG = "UdinicAuthenticator";
@@ -70,7 +64,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
             if (password != null) {
                 try {
                     Log.d("udinic", TAG + "> re-authenticating with the existing password");
-                    authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                    authToken = sServerAuthenticate.userSignIn(account.name, password);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -102,6 +96,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public String getAuthTokenLabel(String authTokenType) {
+
         if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
             return AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
         else if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
@@ -131,4 +126,5 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         return null;
     }
+
 }

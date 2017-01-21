@@ -1,11 +1,5 @@
 package com.udinic.accounts_authenticator_example.authentication;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Udini
- * Date: 20/03/13
- * Time: 18:11
- */
 public class AccountGeneral {
 
     /**
@@ -28,4 +22,5 @@ public class AccountGeneral {
     public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Udinic account";
 
     public static final ServerAuthenticate sServerAuthenticate = new ParseComServerAuthenticate();
+
 }

@@ -20,8 +20,6 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
  * In charge of the Sign up process. Since it's not an AuthenticatorActivity decendent,
  * it returns the result back to the calling activity, which is an AuthenticatorActivity,
  * and it return the result back to the Authenticator
- *
- * User: udinic
  */
 public class SignUpActivity extends Activity {
 
@@ -52,9 +50,6 @@ public class SignUpActivity extends Activity {
     }
 
     private void createAccount() {
-
-        // Validation!
-
         new AsyncTask<String, Void, Intent>() {
 
             String name = ((TextView) findViewById(R.id.name)).getText().toString().trim();
@@ -69,7 +64,7 @@ public class SignUpActivity extends Activity {
                 String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = sServerAuthenticate.userSignUp(name, accountName, accountPassword, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                    authtoken = sServerAuthenticate.userSignUp(name, accountName, accountPassword);
 
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
@@ -101,4 +96,5 @@ public class SignUpActivity extends Activity {
         setResult(RESULT_CANCELED);
         super.onBackPressed();
     }
+
 }

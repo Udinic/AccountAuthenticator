@@ -102,7 +102,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
+                    authtoken = sServerAuthenticate.userSignIn(userName, userPass);
 
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
