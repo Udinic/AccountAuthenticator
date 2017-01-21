@@ -31,7 +31,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -61,7 +60,7 @@ class ParseComServerAuthenticate implements ServerAuthenticate {
             String responseString = EntityUtils.toString(response.getEntity());
 
             if (response.getStatusLine().getStatusCode() != 201) {
-                ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
+                ParseError error = new Gson().fromJson(responseString, ParseError.class);
                 throw new Exception("Error creating user[" + error.code + "] - " + error.error);
             }
 
@@ -110,7 +109,7 @@ class ParseComServerAuthenticate implements ServerAuthenticate {
 
             String responseString = EntityUtils.toString(response.getEntity());
             if (response.getStatusLine().getStatusCode() != 200) {
-                ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
+                ParseError error = new Gson().fromJson(responseString, ParseError.class);
                 throw new Exception("Error signing-in [" + error.code + "] - " + error.error);
             }
 
@@ -122,12 +121,6 @@ class ParseComServerAuthenticate implements ServerAuthenticate {
         }
 
         return authToken;
-    }
-
-
-    private class ParseComError implements Serializable {
-        int code;
-        String error;
     }
 
 }
