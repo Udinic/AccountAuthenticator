@@ -37,6 +37,8 @@ import java.net.URLEncoder;
 
 class ParseComServerAuthenticate implements ServerAuthenticate {
 
+    private static final String TAG = ParseComServerAuthenticate.class.getSimpleName();
+
     @Override
     public String userSignUp(String name, String email, String password) throws Exception {
 
@@ -78,7 +80,7 @@ class ParseComServerAuthenticate implements ServerAuthenticate {
     @Override
     public String userSignIn(String user, String password) throws Exception {
 
-        Log.d("udini", "userSignIn");
+        Log.d(TAG, "userSignIn");
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String url = "https://api.parse.com/1/login";

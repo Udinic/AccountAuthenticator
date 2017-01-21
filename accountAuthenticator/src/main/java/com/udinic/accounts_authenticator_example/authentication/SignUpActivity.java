@@ -75,7 +75,7 @@ public class SignUpActivity extends Activity {
             @Override
             protected Intent doInBackground(String... params) {
 
-                Log.d("udinic", TAG + "> Started authenticating");
+                Log.d(TAG, "> Started authenticating");
 
                 String authtoken = null;
                 Bundle data = new Bundle();
