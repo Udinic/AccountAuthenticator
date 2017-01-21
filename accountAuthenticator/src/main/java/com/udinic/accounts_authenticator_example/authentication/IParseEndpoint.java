@@ -16,7 +16,7 @@
 
 package com.udinic.accounts_authenticator_example.authentication;
 
-public interface ServerAuthenticate {
+public interface IParseEndpoint {
 
     String userSignUp(final String name, final String email, final String password) throws Exception;
 

@@ -34,9 +34,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-class ParseComServerAuthenticate implements ServerAuthenticate {
+class ParseEndpoint implements IParseEndpoint {
 
-    private static final String TAG = ParseComServerAuthenticate.class.getSimpleName();
+    private static final String TAG = ParseEndpoint.class.getSimpleName();
 
     @Override
     public String userSignUp(String name, String email, String password) throws Exception {
