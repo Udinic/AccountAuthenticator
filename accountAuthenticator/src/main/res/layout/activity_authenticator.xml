@@ -41,22 +41,22 @@
         android:padding="10dp" />
 
     <Button
-        android:id="@+id/sign_up"
+        android:id="@+id/sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:onClick="onClick (AuthenticatorActivity)"
         android:padding="10dp"
-        android:text="Sign in"
-        android:onClick="onClick (AuthenticatorActivity)" />
+        android:text="Sign in" />
 
     <TextView
-        android:id="@+id/signUp"
+        android:id="@+id/sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:onClick="onClick (AuthenticatorActivity)"
         android:padding="10dp"
-        android:text="New user?"
-        android:onClick="onClick (AuthenticatorActivity)" />
+        android:text="New user?" />
 
 </LinearLayout>
 

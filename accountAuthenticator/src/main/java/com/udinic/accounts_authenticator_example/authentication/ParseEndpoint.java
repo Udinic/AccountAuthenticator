@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-class ParseEndpoint implements IParseEndpoint {
+public class ParseEndpoint implements IParseEndpoint {
 
     private static final String TAG = ParseEndpoint.class.getSimpleName();
 

@@ -10,7 +10,7 @@
             android:icon="@drawable/ic_udinic">
 
         <!-- *** Not really needed here, but convenient for copying to other apps that will use this module *** -->
-        <activity android:name=".authentication.AuthenticatorActivity" android:label="@string/login_label"/>
+        <activity android:name=".authentication.authenticator.AuthenticatorActivity" android:label="@string/login_label"/>
         <activity android:name=".authentication.signup.SignUpActivity" android:label="@string/signup_title" />
 
         <service android:name=".authentication.UdinicAuthenticatorService">

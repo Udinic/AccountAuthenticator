@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.udinic.accounts_authenticator_example.authentication.authenticator.AuthenticatorActivity;
+
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
