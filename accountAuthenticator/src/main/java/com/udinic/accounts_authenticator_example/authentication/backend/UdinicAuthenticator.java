@@ -28,14 +28,17 @@ import com.udinic.accounts_authenticator_example.authentication.authenticator.Au
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
 
 public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
+    public static final String AUTH_TOKEN_TYPE_FULL_ACCESS = "Full access";
+
     private static String TAG = UdinicAuthenticator.class.getSimpleName();
+
+    private static final String AUTH_TOKEN_TYPE_READ_ONLY = "Read only";
+    private static final String AUTH_TOKEN_TYPE_READ_ONLY_LABEL = "Read only access to an Udinic account";
+    private static final String AUTH_TOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Udinic account";
+
     private final Context mContext;
     private static IParseEndpoint sEndpoint;
 
@@ -44,6 +47,8 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
         // I hate you! Google - set mContext as protected!
         this.mContext = context;
+
+        sEndpoint = ParseEndpoint.getInstance();
     }
 
     @Override
@@ -66,7 +71,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
         // If the caller requested an authToken type we don't support, then
         // return an error
-        if (!authTokenType.equals(AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AUTHTOKEN_TYPE_FULL_ACCESS)) {
+        if (!authTokenType.equals(AUTH_TOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AUTH_TOKEN_TYPE_FULL_ACCESS)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
             return result;
@@ -119,10 +124,10 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public String getAuthTokenLabel(String authTokenType) {
 
-        if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
-            return AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
-        else if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
-            return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+        if (AUTH_TOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
+            return AUTH_TOKEN_TYPE_FULL_ACCESS_LABEL;
+        else if (AUTH_TOKEN_TYPE_READ_ONLY.equals(authTokenType))
+            return AUTH_TOKEN_TYPE_READ_ONLY_LABEL;
         else
             return authTokenType + " (Label)";
     }

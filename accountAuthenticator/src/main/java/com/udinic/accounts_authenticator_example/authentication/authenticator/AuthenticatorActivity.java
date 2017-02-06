@@ -28,13 +28,13 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.udinic.accounts_authenticator_example.R;
+import com.udinic.accounts_authenticator_example.authentication.R;
 import com.udinic.accounts_authenticator_example.authentication.signup.SignUpActivity;
 
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
 import static android.accounts.AccountManager.KEY_PASSWORD;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static com.udinic.accounts_authenticator_example.authentication.backend.UdinicAuthenticator.AUTH_TOKEN_TYPE_FULL_ACCESS;
 
 /**
  * The Authenticator activity.
@@ -90,7 +90,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         mPassword = (EditText) findViewById(R.id.account_password);
 
         if (mAuthTokenType == null)
-            mAuthTokenType = AUTHTOKEN_TYPE_FULL_ACCESS;
+            mAuthTokenType = AUTH_TOKEN_TYPE_FULL_ACCESS;
 
         if (accountName != null) {
             setAccountName(accountName);

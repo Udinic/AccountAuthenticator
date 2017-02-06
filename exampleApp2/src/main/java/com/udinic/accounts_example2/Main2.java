@@ -30,7 +30,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static com.udinic.accounts_authenticator_example.authentication.backend.UdinicAuthenticator.AUTH_TOKEN_TYPE_FULL_ACCESS;
 
 public class Main2 extends Activity {
 
@@ -52,27 +52,27 @@ public class Main2 extends Activity {
         findViewById(R.id.btnAddAccount).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewAccount(getAccountType(), AUTHTOKEN_TYPE_FULL_ACCESS);
+                addNewAccount(getAccountType(), AUTH_TOKEN_TYPE_FULL_ACCESS);
             }
         });
 
         findViewById(R.id.btnGetAuthToken).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                showAccountPicker(AUTH_TOKEN_TYPE_FULL_ACCESS, false);
             }
         });
 
         findViewById(R.id.btnGetAuthTokenConvenient).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTokenForAccountCreateIfNeeded(getAccountType(), AUTHTOKEN_TYPE_FULL_ACCESS);
+                getTokenForAccountCreateIfNeeded(getAccountType(), AUTH_TOKEN_TYPE_FULL_ACCESS);
             }
         });
         findViewById(R.id.btnInvalidateAuthToken).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                showAccountPicker(AUTH_TOKEN_TYPE_FULL_ACCESS, true);
             }
         });
 
@@ -80,7 +80,7 @@ public class Main2 extends Activity {
             boolean showDialog = savedInstanceState.getBoolean(STATE_DIALOG);
             boolean invalidate = savedInstanceState.getBoolean(STATE_INVALIDATE);
             if (showDialog) {
-                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
+                showAccountPicker(AUTH_TOKEN_TYPE_FULL_ACCESS, invalidate);
             }
         }
 
