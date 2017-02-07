@@ -30,8 +30,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral;
-
 import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
 public class Main1 extends Activity {
@@ -55,7 +53,7 @@ public class Main1 extends Activity {
         findViewById(R.id.btnAddAccount).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewAccount(getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                addNewAccount(getAccountType(), AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
 
@@ -69,7 +67,7 @@ public class Main1 extends Activity {
         findViewById(R.id.btnGetAuthTokenConvenient).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTokenForAccountCreateIfNeeded(getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                getTokenForAccountCreateIfNeeded(getAccountType(), AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
         findViewById(R.id.btnInvalidateAuthToken).setOnClickListener(new View.OnClickListener() {
@@ -131,7 +129,7 @@ public class Main1 extends Activity {
      * @param authTokenType
      */
     private void showAccountPicker(final String authTokenType, final boolean invalidate) {
-    	mInvalidate = invalidate;
+        mInvalidate = invalidate;
         final Account availableAccounts[] = mAccountManager.getAccountsByType(getAccountType());
 
         if (availableAccounts.length == 0) {
@@ -248,4 +246,5 @@ public class Main1 extends Activity {
             });
         }
     }
+
 }

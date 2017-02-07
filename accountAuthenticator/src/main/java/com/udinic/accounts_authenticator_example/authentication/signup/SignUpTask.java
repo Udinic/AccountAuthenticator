@@ -21,21 +21,26 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.udinic.accounts_authenticator_example.authentication.backend.IParseEndpoint;
+import com.udinic.accounts_authenticator_example.authentication.backend.ParseEndpoint;
+
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 import static android.accounts.AccountManager.KEY_ERROR_MESSAGE;
 import static android.accounts.AccountManager.KEY_PASSWORD;
 import static android.accounts.AccountManager.KEY_USERDATA;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.sServerAuthenticate;
 
 class SignUpTask extends AsyncTask<Bundle, Void, Bundle> {
 
     private static final String TAG = SignUpTask.class.getSimpleName();
 
+    private static IParseEndpoint sEndpoint;
+
     private final SignUpContract.View mView;
 
     SignUpTask(SignUpContract.View view) {
         mView = view;
+        sEndpoint = ParseEndpoint.getInstance();
     }
 
     @Override
@@ -52,7 +57,7 @@ class SignUpTask extends AsyncTask<Bundle, Void, Bundle> {
         final String password = authData.getString(KEY_PASSWORD);
 
         try {
-            String authToken = sServerAuthenticate.userSignUp(name, accountName, password);
+            String authToken = sEndpoint.userSignUp(name, accountName, password);
             authData.putString(KEY_AUTHTOKEN, authToken);
         } catch (Exception e) {
             authData.clear();

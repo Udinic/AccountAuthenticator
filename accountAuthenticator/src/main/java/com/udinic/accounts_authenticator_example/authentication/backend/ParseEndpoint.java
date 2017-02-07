@@ -37,6 +37,22 @@ import java.net.URLEncoder;
 public class ParseEndpoint implements IParseEndpoint {
 
     private static final String TAG = ParseEndpoint.class.getSimpleName();
+    private static final Object LOCK = new Object();
+
+    private static IParseEndpoint sParseEndpoint;
+
+    public static synchronized IParseEndpoint getInstance() {
+        if (null == sParseEndpoint) {
+            synchronized (LOCK) {
+                sParseEndpoint = factory();
+            }
+        }
+        return sParseEndpoint;
+    }
+
+    public static IParseEndpoint factory() {
+        return new ParseEndpoint();
+    }
 
     @Override
     public String userSignUp(String name, String email, String password) throws Exception {

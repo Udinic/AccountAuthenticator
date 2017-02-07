@@ -32,12 +32,12 @@ import static com.udinic.accounts_authenticator_example.authentication.backend.A
 import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
 import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
 import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
-import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.sServerAuthenticate;
 
 public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
     private static String TAG = UdinicAuthenticator.class.getSimpleName();
     private final Context mContext;
+    private static IParseEndpoint sEndpoint;
 
     public UdinicAuthenticator(Context context) {
         super(context);
@@ -86,7 +86,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
             if (password != null) {
                 try {
                     Log.d("udinic", TAG + "> re-authenticating with the existing password");
-                    authToken = sServerAuthenticate.userSignIn(account.name, password);
+                    authToken = sEndpoint.userSignIn(account.name, password);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
