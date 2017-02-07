@@ -26,7 +26,7 @@ import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 import static android.accounts.AccountManager.KEY_ERROR_MESSAGE;
 import static android.accounts.AccountManager.KEY_PASSWORD;
 import static android.accounts.AccountManager.KEY_USERDATA;
-import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.sServerAuthenticate;
 
 class SignUpTask extends AsyncTask<Bundle, Void, Bundle> {
 

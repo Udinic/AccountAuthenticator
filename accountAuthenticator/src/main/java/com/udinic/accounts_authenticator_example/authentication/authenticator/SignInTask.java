@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package com.udinic.accounts_authenticator_example.authentication.authenticator;
 
 import android.accounts.AccountManager;
@@ -23,8 +22,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.udinic.accounts_authenticator_example.authentication.IParseEndpoint;
-import com.udinic.accounts_authenticator_example.authentication.ParseEndpoint;
+import com.udinic.accounts_authenticator_example.authentication.backend.IParseEndpoint;
+import com.udinic.accounts_authenticator_example.authentication.backend.ParseEndpoint;
 
 import static android.accounts.AccountManager.KEY_ERROR_MESSAGE;
 import static android.accounts.AccountManager.KEY_PASSWORD;

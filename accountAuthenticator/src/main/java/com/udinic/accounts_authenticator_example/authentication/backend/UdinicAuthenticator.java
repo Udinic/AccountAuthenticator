@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Udi Cohen
+ * Copyright (c) 2017 Udi Cohen, Joao Paulo Fernandes Ventura
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.udinic.accounts_authenticator_example.authentication;
+package com.udinic.accounts_authenticator_example.authentication.backend;
 
 import android.accounts.*;
 import android.content.Context;
@@ -28,8 +28,11 @@ import com.udinic.accounts_authenticator_example.authentication.authenticator.Au
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-
-import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.*;
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.sServerAuthenticate;
 
 public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
@@ -63,7 +66,7 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
         // If the caller requested an authToken type we don't support, then
         // return an error
-        if (!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+        if (!authTokenType.equals(AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AUTHTOKEN_TYPE_FULL_ACCESS)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
             return result;

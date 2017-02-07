@@ -13,7 +13,7 @@
         <activity android:name=".authentication.authenticator.AuthenticatorActivity" android:label="@string/login_label"/>
         <activity android:name=".authentication.signup.SignUpActivity" android:label="@string/signup_title" />
 
-        <service android:name=".authentication.UdinicAuthenticatorService">
+        <service android:name=".authentication.backend.UdinicAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>

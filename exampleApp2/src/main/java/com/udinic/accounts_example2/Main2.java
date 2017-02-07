@@ -16,8 +16,6 @@
 
 package com.udinic.accounts_example2;
 
-import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -32,7 +30,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
+import com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral;
+
+import static com.udinic.accounts_authenticator_example.authentication.backend.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
 public class Main2 extends Activity {
 
