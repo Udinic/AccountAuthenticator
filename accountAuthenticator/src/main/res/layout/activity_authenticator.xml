@@ -15,37 +15,48 @@
  - limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
     android:orientation="vertical"
-    android:padding="17dp">
+    android:paddingLeft="17dp"
+    android:paddingRight="17dp">
 
-    <Button
-        android:id="@+id/btnAddAccount"
+    <EditText
+        android:id="@+id/account_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="addAccount" />
+        android:layout_marginTop="20dp"
+        android:hint="Email address"
+        android:inputType="textEmailAddress"
+        android:padding="10dp" />
 
-    <Button
-        android:id="@+id/btnGetAuthToken"
+    <EditText
+        android:id="@+id/account_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="getAuthToken" />
+        android:layout_marginTop="10dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp" />
 
     <Button
-        android:id="@+id/btnGetAuthTokenConvenient"
+        android:id="@+id/sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="onClick (AuthenticatorActivity)"
         android:padding="10dp"
-        android:text="getAuthTokenByFeatures" />
+        android:text="Sign in" />
 
-    <Button
-        android:id="@+id/btnInvalidateAuthToken"
+    <TextView
+        android:id="@+id/sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:onClick="onClick (AuthenticatorActivity)"
         android:padding="10dp"
-        android:text="invalidateAuthToken" />
+        android:text="New user?" />
 
 </LinearLayout>
+

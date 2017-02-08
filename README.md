@@ -13,6 +13,7 @@ Developed By
 ============
 
 * Udi Cohen (udinic@gmail.com)
+* JP Ventura (contact@jpventura.com)
 
 
 
