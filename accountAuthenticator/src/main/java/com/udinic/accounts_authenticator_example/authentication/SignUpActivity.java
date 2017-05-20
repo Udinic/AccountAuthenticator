@@ -19,7 +19,7 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
  * In charge of the Sign up process. Since it's not an AuthenticatorActivity decendent,
  * it returns the result back to the calling activity, which is an AuthenticatorActivity,
  * and it return the result back to the Authenticator
- *
+ * <p>
  * User: udinic
  */
 public class SignUpActivity extends Activity {
@@ -100,4 +100,5 @@ public class SignUpActivity extends Activity {
         setResult(RESULT_CANCELED);
         super.onBackPressed();
     }
+
 }

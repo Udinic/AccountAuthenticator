@@ -1,7 +1,9 @@
 package com.udinic.accounts_authenticator_example.authentication;
 
 import android.util.Log;
+
 import com.google.gson.Gson;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -17,14 +19,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-/**
- * Handles the comminication with Parse.com
- *
- * User: udinic
- * Date: 3/27/13
- * Time: 3:30 AM
- */
-public class ParseComServerAuthenticate implements ServerAuthenticate{
+public class ParseComServerAuthenticate implements ServerAuthenticate {
     @Override
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
 
@@ -33,7 +28,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
 
-        httpPost.addHeader("X-Parse-Application-Id","XUafJTkPikD5XN5HxciweVuSe12gDgk2tzMltOhr");
+        httpPost.addHeader("X-Parse-Application-Id", "XUafJTkPikD5XN5HxciweVuSe12gDgk2tzMltOhr");
         httpPost.addHeader("X-Parse-REST-API-Key", "8L9yTQ3M86O4iiucwWb4JS7HkxoSKo7ssJqGChWx");
         httpPost.addHeader("Content-Type", "application/json");
 
@@ -48,7 +43,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
 
             if (response.getStatusLine().getStatusCode() != 201) {
                 ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
-                throw new Exception("Error creating user["+error.code+"] - " + error.error);
+                throw new Exception("Error creating user[" + error.code + "] - " + error.error);
             }
 
 
@@ -98,7 +93,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
             String responseString = EntityUtils.toString(response.getEntity());
             if (response.getStatusLine().getStatusCode() != 200) {
                 ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
-                throw new Exception("Error signing-in ["+error.code+"] - " + error.error);
+                throw new Exception("Error signing-in [" + error.code + "] - " + error.error);
             }
 
             User loggedUser = new Gson().fromJson(responseString, User.class);
@@ -116,6 +111,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         int code;
         String error;
     }
+
     private class User implements Serializable {
 
         private String firstName;

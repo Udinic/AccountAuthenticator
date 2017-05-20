@@ -15,9 +15,9 @@ import static com.udinic.accounts_authenticator_example.authentication.AccountGe
 
 /**
  * The Authenticator activity.
- *
+ * <p>
  * Called by the Authenticator and in charge of identifing the user.
- *
+ * <p>
  * It sends back to the Authenticator the result.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
