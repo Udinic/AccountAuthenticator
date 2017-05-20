@@ -74,16 +74,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        // The sign up activity returned that the user has successfully created an account
-        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-            finishLogin(data);
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void submit() {
 
         final String userName = ((TextView) findViewById(R.id.account_name)).getText().toString();
@@ -126,6 +116,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // The sign up activity returned that the user has successfully created an account
+        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
+            finishLogin(data);
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void finishLogin(Intent intent) {

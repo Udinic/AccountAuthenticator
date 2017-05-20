@@ -1,4 +1,4 @@
-package com.udinic.accounts_example;
+package com.udinic.accounts_example2;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -18,9 +18,9 @@ import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-public class Main1 extends Activity {
+public class MainActivity extends Activity {
 
-    private static final String LOG_TAG = Main1.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName() + " #2";
 
     private static final String STATE_DIALOG = "state_dialog";
     private static final String STATE_INVALIDATE = "state_invalidate";
@@ -33,7 +33,7 @@ public class Main1 extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_main);
         mAccountManager = AccountManager.get(this);
 
         findViewById(R.id.button_add_account).setOnClickListener(new View.OnClickListener() {
