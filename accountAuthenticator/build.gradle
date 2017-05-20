@@ -20,5 +20,8 @@ android {
 
 dependencies {
     compile "com.google.code.gson:gson:$rootProject.googleGsonLibraryVersion"
+    compile "com.google.firebase:firebase-auth:$rootProject.firebaseLibraryVersion"
     compile "com.google.guava:guava:$rootProject.guavaVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'
