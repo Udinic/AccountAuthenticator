@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName() + " #1";
 
@@ -46,38 +47,37 @@ public class MainActivity extends Activity {
     private boolean mInvalidate;
 
     @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.button_add_account:
+                addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                break;
+
+            case R.id.button_get_auth_token:
+                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                break;
+
+            case R.id.button_get_auth_token_convenient:
+                getTokenForAccountCreateIfNeeded(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                break;
+
+            case R.id.button_invalidate_auth_token:
+                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                break;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         mAccountManager = AccountManager.get(this);
 
-        findViewById(R.id.button_add_account).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-            }
-        });
-
-        findViewById(R.id.button_get_auth_token).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, false);
-            }
-        });
-
-        findViewById(R.id.button_get_auth_token_convenient).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getTokenForAccountCreateIfNeeded(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-            }
-        });
-        findViewById(R.id.button_invalidate_auth_token).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);
-            }
-        });
+        findViewById(R.id.button_add_account).setOnClickListener(this);
+        findViewById(R.id.button_get_auth_token).setOnClickListener(this);
+        findViewById(R.id.button_get_auth_token_convenient).setOnClickListener(this);
+        findViewById(R.id.button_invalidate_auth_token).setOnClickListener(this);
 
         if (savedInstanceState != null) {
             boolean showDialog = savedInstanceState.getBoolean(STATE_DIALOG);
@@ -222,7 +222,7 @@ public class MainActivity extends Activity {
             }
 
             // Account picker
-            mAlertDialog = new AlertDialog.Builder(this).setTitle("Pick Account").setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, name), new DialogInterface.OnClickListener() {
+            mAlertDialog = new AlertDialog.Builder(this).setTitle("Pick Account").setAdapter(new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, name), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (invalidate)

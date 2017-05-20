@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
  * it returns the result back to the calling activity, which is an AuthenticatorActivity,
  * and it return the result back to the Authenticator
  */
-public class SignUpActivity extends Activity {
+public class SignUpActivity extends Activity implements OnClickListener {
 
     private static final String LOG_TAG = SignUpActivity.class.getSimpleName();
 
@@ -49,6 +50,20 @@ public class SignUpActivity extends Activity {
     }
 
     @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.already_member) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
+
+        if (view.getId() == R.id.submit) {
+            createAccount();
+            return;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -56,19 +71,8 @@ public class SignUpActivity extends Activity {
 
         setContentView(R.layout.act_register);
 
-        findViewById(R.id.already_member).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
-        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAccount();
-            }
-        });
+        findViewById(R.id.already_member).setOnClickListener(this);
+        findViewById(R.id.submit).setOnClickListener(this);
     }
 
     private void createAccount() {

@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ import static com.udinic.accounts_authenticator_example.authentication.AccountGe
  * <p>
  * It sends back to the Authenticator the result.
  */
-public class AuthenticatorActivity extends AccountAuthenticatorActivity {
+public class AuthenticatorActivity extends AccountAuthenticatorActivity implements OnClickListener {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
 
@@ -53,6 +54,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.submit) {
+            submit();
+            return;
+        }
+
+        if (view.getId() == R.id.sign_up) {
+            // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
+            // and return them in setAccountAuthenticatorResult(). See finishLogin().
+            Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
+            signup.putExtras(getIntent().getExtras());
+            startActivityForResult(signup, REQ_SIGNUP);
+            return;
+        }
+    }
 
     /**
      * Called when the activity is first created.
@@ -72,22 +90,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             ((TextView)findViewById(R.id.account_name)).setText(accountName);
         }
 
-        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-            }
-        });
-        findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
-                // and return them in setAccountAuthenticatorResult(). See finishLogin().
-                Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
-                signup.putExtras(getIntent().getExtras());
-                startActivityForResult(signup, REQ_SIGNUP);
-            }
-        });
+        findViewById(R.id.submit).setOnClickListener(this);
+        findViewById(R.id.sign_up).setOnClickListener(this);
     }
 
     public void submit() {
