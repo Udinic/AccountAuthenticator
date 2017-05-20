@@ -38,7 +38,7 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
  */
 public class SignUpActivity extends Activity {
 
-    private String TAG = getClass().getSimpleName();
+    private static final String LOG_TAG = SignUpActivity.class.getSimpleName();
 
     private String mAccountType;
 
@@ -84,7 +84,7 @@ public class SignUpActivity extends Activity {
             @Override
             protected Intent doInBackground(String... params) {
 
-                Log.d("udinic", TAG + "> Started authenticating");
+                Log.d(LOG_TAG, "Started authenticating");
 
                 String authtoken = null;
                 Bundle data = new Bundle();

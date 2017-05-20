@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
                 try {
                     Bundle bnd = future.getResult();
                     showMessage("Account was created");
-                    Log.d("udinic", "AddNewAccount Bundle is " + bnd);
+                    Log.d(LOG_TAG, "AddNewAccount Bundle is " + bnd);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -138,7 +138,8 @@ public class MainActivity extends Activity {
 
                     final String authToken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
                     showMessage((authToken != null) ? "SUCCESS!\ntoken: " + authToken : "FAIL");
-                    Log.d("udinic", "GetToken Bundle is " + bnd);
+                    Log.d(LOG_TAG, "GetToken Bundle is " + bnd);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     showMessage(e.getMessage());
@@ -166,7 +167,7 @@ public class MainActivity extends Activity {
                             bnd = future.getResult();
                             final String authToken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
                             showMessage(((authToken != null) ? "SUCCESS!\ntoken: " + authToken : "FAIL"));
-                            Log.d("udinic", "GetTokenForAccount Bundle is " + bnd);
+                            Log.d(LOG_TAG, "GetTokenForAccount Bundle is " + bnd);
 
                         } catch (Exception e) {
                             e.printStackTrace();

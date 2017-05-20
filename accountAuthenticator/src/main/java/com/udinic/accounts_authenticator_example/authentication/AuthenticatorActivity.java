@@ -38,6 +38,8 @@ import static com.udinic.accounts_authenticator_example.authentication.AccountGe
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
+    private final String LOG_TAG = this.getClass().getSimpleName();
+
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -48,8 +50,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String PARAM_USER_PASS = "USER_PASS";
 
     private final int REQ_SIGNUP = 1;
-
-    private final String TAG = this.getClass().getSimpleName();
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;
@@ -102,7 +102,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             protected Intent doInBackground(String... params) {
 
-                Log.d("udinic", TAG + "> Started authenticating");
+                Log.d(LOG_TAG, "> Started authenticating");
 
                 String authtoken = null;
                 Bundle data = new Bundle();
@@ -145,14 +145,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void finishLogin(Intent intent) {
-        Log.d("udinic", TAG + "> finishLogin");
+        Log.d(LOG_TAG, "> finishLogin");
 
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d("udinic", TAG + "> finishLogin > addAccountExplicitly");
+            Log.d(LOG_TAG, "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
@@ -161,7 +161,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
         } else {
-            Log.d("udinic", TAG + "> finishLogin > setPassword");
+            Log.d(LOG_TAG, "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
 

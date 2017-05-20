@@ -36,6 +36,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class ParseComServerAuthenticate implements ServerAuthenticate {
+
+    private static final String LOG_TAG = ParseComServerAuthenticate.class.getSimpleName();
+
     @Override
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
 
@@ -76,8 +79,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
 
     @Override
     public String userSignIn(String user, String pass, String authType) throws Exception {
-
-        Log.d("udini", "userSignIn");
+        Log.d(LOG_TAG, "userSignIn");
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String url = "https://api.parse.com/1/login";
