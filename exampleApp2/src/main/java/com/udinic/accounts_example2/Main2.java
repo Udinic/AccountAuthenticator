@@ -40,27 +40,27 @@ public class Main2 extends Activity {
         setContentView(R.layout.main);
         mAccountManager = AccountManager.get(this);
 
-        findViewById(R.id.btnAddAccount).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_add_account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
 
-        findViewById(R.id.btnGetAuthToken).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_get_auth_token).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, false);
             }
         });
 
-        findViewById(R.id.btnGetAuthTokenConvenient).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_get_auth_token_convenient).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getTokenForAccountCreateIfNeeded(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
-        findViewById(R.id.btnInvalidateAuthToken).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_invalidate_auth_token).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);

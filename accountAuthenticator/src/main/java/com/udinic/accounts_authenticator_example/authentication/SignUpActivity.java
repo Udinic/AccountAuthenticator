@@ -36,7 +36,7 @@ public class SignUpActivity extends Activity {
 
         setContentView(R.layout.act_register);
 
-        findViewById(R.id.alreadyMember).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.already_member).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
@@ -58,8 +58,8 @@ public class SignUpActivity extends Activity {
         new AsyncTask<String, Void, Intent>() {
 
             String name = ((TextView) findViewById(R.id.name)).getText().toString().trim();
-            String accountName = ((TextView) findViewById(R.id.accountName)).getText().toString().trim();
-            String accountPassword = ((TextView) findViewById(R.id.accountPassword)).getText().toString().trim();
+            String accountName = ((TextView) findViewById(R.id.account_name)).getText().toString().trim();
+            String accountPassword = ((TextView) findViewById(R.id.account_password)).getText().toString().trim();
 
             @Override
             protected Intent doInBackground(String... params) {

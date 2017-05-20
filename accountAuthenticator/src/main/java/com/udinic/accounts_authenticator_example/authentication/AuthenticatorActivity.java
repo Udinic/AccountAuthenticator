@@ -54,7 +54,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
         if (accountName != null) {
-            ((TextView)findViewById(R.id.accountName)).setText(accountName);
+            ((TextView)findViewById(R.id.account_name)).setText(accountName);
         }
 
         findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
@@ -63,7 +63,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 submit();
             }
         });
-        findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
@@ -87,8 +87,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void submit() {
 
-        final String userName = ((TextView) findViewById(R.id.accountName)).getText().toString();
-        final String userPass = ((TextView) findViewById(R.id.accountPassword)).getText().toString();
+        final String userName = ((TextView) findViewById(R.id.account_name)).getText().toString();
+        final String userPass = ((TextView) findViewById(R.id.account_password)).getText().toString();
 
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 

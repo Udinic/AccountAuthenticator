@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="17dp"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="17dp">
 
-    <Button android:id="@+id/btnAddAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="addAccount"/>
+    <Button
+        android:id="@+id/button_add_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="addAccount" />
 
-    <Button android:id="@+id/btnGetAuthToken"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="getAuthToken"/>
+    <Button
+        android:id="@+id/button_get_auth_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="getAuthToken" />
 
-    <Button android:id="@+id/btnGetAuthTokenConvenient"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="getAuthTokenByFeatures"/>
+    <Button
+        android:id="@+id/button_get_auth_token_convenient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="getAuthTokenByFeatures" />
 
-    <Button android:id="@+id/btnInvalidateAuthToken"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="invalidateAuthToken"/>
+    <Button
+        android:id="@+id/button_invalidate_auth_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="invalidateAuthToken" />
 
 </LinearLayout>
