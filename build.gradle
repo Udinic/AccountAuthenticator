@@ -23,6 +23,7 @@ ext {
     targetSdkVersion = 25
 
     // Application dependencies
+    constraintLayoutVersion = '1.0.2'
     firebaseLibraryVersion = '11.0.1'
     googleGsonLibraryVersion = '2.7'
     googlePlayLibraryVersion = rootProject.firebaseLibraryVersion

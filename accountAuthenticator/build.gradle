@@ -18,6 +18,7 @@ android {
 }
 
 dependencies {
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.google.code.gson:gson:$rootProject.googleGsonLibraryVersion"
     compile "com.google.firebase:firebase-auth:$rootProject.firebaseLibraryVersion"
     compile "com.google.guava:guava:$rootProject.guavaVersion"
