@@ -32,7 +32,7 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
 import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.PARAM_USER_PASS;
 
 /**
- * In charge of the Sign up process. Since it's not an AuthenticatorActivity decendent,
+ * In charge of the Sign up process. Since it's not an AuthenticatorActivity descendant,
  * it returns the result back to the calling activity, which is an AuthenticatorActivity,
  * and it return the result back to the Authenticator
  */
