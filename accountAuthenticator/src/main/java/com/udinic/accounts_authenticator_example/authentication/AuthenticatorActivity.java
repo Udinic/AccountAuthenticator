@@ -17,7 +17,6 @@
 package com.udinic.accounts_authenticator_example.authentication;
 
 import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
