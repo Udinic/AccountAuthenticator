@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.udinic.accounts_authenticator_example.R;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
 import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.ARG_ACCOUNT_TYPE;
