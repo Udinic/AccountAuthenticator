@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Udi Cohen
+ * Copyright (C) 2017 Udi Cohen, Joao Paulo Fernandes Ventura
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,5 +37,4 @@ public class AccountGeneral {
     public static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
     public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Udinic account";
 
-    public static final ServerAuthenticate sServerAuthenticate = new ParseComServerAuthenticate();
 }

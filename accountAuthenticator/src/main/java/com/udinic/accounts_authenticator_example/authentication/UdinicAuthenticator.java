@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Udi Cohen
+ * Copyright (C) 2017 Udi Cohen, Joao Paulo Fernandes Ventura
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Tasks;
+
+import static android.accounts.AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE;
+import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
+import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
+import static android.accounts.AccountManager.KEY_PASSWORD;
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.*;
+import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.KEY_AUTH_TOKEN_TYPE;
 
 public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
@@ -43,10 +50,10 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
         Log.d(LOG_TAG, "> addAccount");
 
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
-        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(KEY_ACCOUNT_TYPE, accountType);
+        intent.putExtra(KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        intent.putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType);
         intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
@@ -68,31 +75,31 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
         // Extract the username and password from the Account Manager, and ask
         // the server for an appropriate AuthToken.
         final AccountManager am = AccountManager.get(mContext);
-
-        String authToken = am.peekAuthToken(account, authTokenType);
-
-        Log.d(LOG_TAG, "> peekAuthToken returned - " + authToken);
+        final String authToken = am.peekAuthToken(account, authTokenType);
+        Bundle authData = new Bundle();
 
         // Lets give another try to authenticate the user
         if (TextUtils.isEmpty(authToken)) {
             final String password = am.getPassword(account);
-            if (password != null) {
+
+            if (!TextUtils.isEmpty(password)) {
+                authData.putString(KEY_ACCOUNT_NAME, account.name);
+                authData.putString(KEY_ACCOUNT_TYPE, account.type);
+                authData.putString(KEY_AUTH_TOKEN_TYPE, authTokenType);
+                authData.putString(KEY_PASSWORD, password);
                 try {
                     Log.d(LOG_TAG, "> re-authenticating with the existing password");
-                    authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                    authData = Tasks.await(Tasks.forResult(authData).continueWithTask(new SignInTask()));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    authData.clear();
                 }
             }
         }
 
         // If we get an authToken - we return it
-        if (!TextUtils.isEmpty(authToken)) {
-            final Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-            return result;
+        if (authData.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+            return authData;
         }
 
         // If we get here, then we couldn't access the user's password - so we
@@ -100,14 +107,13 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
         // an intent to display our AuthenticatorActivity.
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, account.type);
-        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.name);
+        intent.putExtra(KEY_ACCOUNT_NAME, account.name);
+        intent.putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType);
+        intent.putExtra(KEY_ACCOUNT_TYPE, account.type);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;
     }
-
 
     @Override
     public String getAuthTokenLabel(String authTokenType) {
@@ -140,4 +146,5 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         return null;
     }
+
 }

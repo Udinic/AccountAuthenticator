@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Udi Cohen
+ * Copyright (C) 2017 Udi Cohen, Joao Paulo Fernandes Ventura
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,43 @@
 
 package com.udinic.accounts_authenticator_example.authentication;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
-import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.ARG_ACCOUNT_TYPE;
-import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.KEY_ERROR_MESSAGE;
-import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.PARAM_USER_PASS;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
+
+import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
+import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
+import static android.accounts.AccountManager.KEY_PASSWORD;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static com.udinic.accounts_authenticator_example.authentication.AuthenticatorActivity.KEY_AUTH_TOKEN_TYPE;
 
 /**
  * In charge of the Sign up process. Since it's not an AuthenticatorActivity descendant,
  * it returns the result back to the calling activity, which is an AuthenticatorActivity,
  * and it return the result back to the Authenticator
  */
-public class SignUpActivity extends Activity implements OnClickListener {
+public class SignUpActivity extends Activity implements OnClickListener, OnFailureListener,
+        OnSuccessListener<Bundle> {
 
     private static final String LOG_TAG = SignUpActivity.class.getSimpleName();
 
+    private EditText mEmail;
+    private EditText mName;
+    private EditText mPassword;
+
     private String mAccountType;
+    private String mAuthTokenType;
 
     @Override
     public void onBackPressed() {
@@ -67,57 +78,51 @@ public class SignUpActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAccountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-
         setContentView(R.layout.activity_sign_up);
+
+        mName = (EditText) findViewById(R.id.name);
+        mEmail = (EditText) findViewById(R.id.account_name);
+        mPassword = (EditText) findViewById(R.id.account_password);
 
         findViewById(R.id.already_member).setOnClickListener(this);
         findViewById(R.id.submit).setOnClickListener(this);
+
+        Bundle authData = getIntent().getExtras();
+        mAccountType = checkNotNull(authData.getString(KEY_ACCOUNT_TYPE));
+        mAuthTokenType = authData.getString(KEY_AUTH_TOKEN_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS);
+    }
+
+    @Override
+    public void onFailure(@NonNull Exception error) {
+        Toast.makeText(getBaseContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSuccess(@NonNull final Bundle authData) {
+        final Intent intent = new Intent();
+        intent.putExtras(checkNotNull(authData));
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void createAccount() {
+        Bundle authData = new Bundle();
+        authData.putString(KEY_ACCOUNT_NAME, getAccountName());
+        authData.putString(KEY_ACCOUNT_TYPE, mAccountType);
+        authData.putString(KEY_PASSWORD, getPassword());
+        authData.putString(KEY_AUTH_TOKEN_TYPE, mAuthTokenType);
 
-        // Validation!
+        Tasks.forResult(authData).continueWithTask(new SignUpTask())
+                .addOnFailureListener(this)
+                .addOnSuccessListener(this);
+    }
 
-        new AsyncTask<String, Void, Intent>() {
+    private String getAccountName() {
+        return mEmail.getText().toString().trim();
+    }
 
-            String name = ((TextView) findViewById(R.id.name)).getText().toString().trim();
-            String accountName = ((TextView) findViewById(R.id.account_name)).getText().toString().trim();
-            String accountPassword = ((TextView) findViewById(R.id.account_password)).getText().toString().trim();
-
-            @Override
-            protected Intent doInBackground(String... params) {
-
-                Log.d(LOG_TAG, "Started authenticating");
-
-                String authtoken = null;
-                Bundle data = new Bundle();
-                try {
-                    authtoken = sServerAuthenticate.userSignUp(name, accountName, accountPassword, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
-                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
-                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                    data.putString(PARAM_USER_PASS, accountPassword);
-                } catch (Exception e) {
-                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
-                }
-
-                final Intent res = new Intent();
-                res.putExtras(data);
-                return res;
-            }
-
-            @Override
-            protected void onPostExecute(Intent intent) {
-                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                    Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
-                } else {
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            }
-        }.execute();
+    private String getPassword() {
+        return mPassword.getText().toString().trim();
     }
 
 }

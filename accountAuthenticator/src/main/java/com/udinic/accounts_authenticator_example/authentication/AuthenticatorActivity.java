@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Udi Cohen
+ * Copyright (C) 2017 Udi Cohen, Joao Paulo Fernandes Ventura
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,23 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
+
+import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
+import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
+import static android.accounts.AccountManager.KEY_AUTHTOKEN;
+import static android.accounts.AccountManager.KEY_PASSWORD;
+import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
 /**
  * The Authenticator activity.
@@ -37,22 +45,25 @@ import static com.udinic.accounts_authenticator_example.authentication.AccountGe
  * <p>
  * It sends back to the Authenticator the result.
  */
-public class AuthenticatorActivity extends AccountAuthenticatorActivity implements OnClickListener {
+public class AuthenticatorActivity extends AccountAuthenticatorActivity implements
+        OnClickListener, OnFailureListener, OnSuccessListener<Bundle> {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
 
-    public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
-    public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
-    public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
+
+    public final static String KEY_AUTH_TOKEN_TYPE = "AUTH_TYPE";
+
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
-    public final static String PARAM_USER_PASS = "USER_PASS";
-
     private final int REQ_SIGNUP = 1;
 
+    private EditText mEmail;
+    private EditText mPassword;
+
     private AccountManager mAccountManager;
+    private String mAccountType;
     private String mAuthTokenType;
 
     @Override
@@ -81,66 +92,47 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         setContentView(R.layout.activity_sign_in);
         mAccountManager = AccountManager.get(getBaseContext());
 
-        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
-        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
-        if (mAuthTokenType == null)
-            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
-        if (accountName != null) {
-            ((TextView)findViewById(R.id.account_name)).setText(accountName);
-        }
+        mEmail = (EditText) findViewById(R.id.account_name);
+        mPassword = (EditText) findViewById(R.id.account_password);
 
         findViewById(R.id.submit).setOnClickListener(this);
         findViewById(R.id.sign_up).setOnClickListener(this);
+
+        final Bundle authData = getIntent().getExtras();
+        mAccountType = authData.getString(KEY_ACCOUNT_TYPE);
+        mAuthTokenType = authData.getString(KEY_AUTH_TOKEN_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS);
+
+        setAccountName(authData.getString(KEY_ACCOUNT_NAME, null));
+    }
+
+    @Override
+    public void onFailure(@NonNull Exception error) {
+        Toast.makeText(getBaseContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+        error.printStackTrace();
+    }
+
+    @Override
+    public void onSuccess(Bundle authData) {
+        final Intent intent = new Intent();
+        intent.putExtras(authData);
+        finishLogin(intent);
     }
 
     public void submit() {
+        final Bundle authData = new Bundle();
+        authData.putString(KEY_ACCOUNT_NAME, getAccountName());
+        authData.putString(KEY_ACCOUNT_TYPE, mAccountType);
+        authData.putString(KEY_AUTH_TOKEN_TYPE, mAuthTokenType);
+        authData.putString(KEY_PASSWORD, getPassword());
 
-        final String userName = ((TextView) findViewById(R.id.account_name)).getText().toString();
-        final String userPass = ((TextView) findViewById(R.id.account_password)).getText().toString();
-
-        final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-
-        new AsyncTask<String, Void, Intent>() {
-
-            @Override
-            protected Intent doInBackground(String... params) {
-
-                Log.d(LOG_TAG, "> Started authenticating");
-
-                String authtoken = null;
-                Bundle data = new Bundle();
-                try {
-                    authtoken = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
-
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                    data.putString(PARAM_USER_PASS, userPass);
-
-                } catch (Exception e) {
-                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
-                }
-
-                final Intent res = new Intent();
-                res.putExtras(data);
-                return res;
-            }
-
-            @Override
-            protected void onPostExecute(Intent intent) {
-                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                    Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
-                } else {
-                    finishLogin(intent);
-                }
-            }
-        }.execute();
+        Tasks.forResult(authData)
+                .continueWithTask(new SignInTask())
+                .addOnFailureListener(this)
+                .addOnSuccessListener(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         // The sign up activity returned that the user has successfully created an account
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
             finishLogin(data);
@@ -151,19 +143,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
     private void finishLogin(Intent intent) {
         Log.d(LOG_TAG, "> finishLogin");
 
-        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+        String accountName = intent.getStringExtra(KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(KEY_PASSWORD);
+        final Account account = new Account(accountName, intent.getStringExtra(KEY_ACCOUNT_TYPE));
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
             Log.d(LOG_TAG, "> finishLogin > addAccountExplicitly");
-            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-            String authtokenType = mAuthTokenType;
+            String authToken = intent.getStringExtra(KEY_AUTHTOKEN);
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
-            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+            mAccountManager.setAuthToken(account, mAuthTokenType, authToken);
         } else {
             Log.d(LOG_TAG, "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
@@ -172,6 +163,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private String getAccountName() {
+        return mEmail.getText().toString().trim();
+    }
+
+    private void setAccountName(String name) {
+        mEmail.setText(name);
+    }
+
+    private String getPassword() {
+        return mPassword.getText().toString().trim();
     }
 
 }
