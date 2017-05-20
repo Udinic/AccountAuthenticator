@@ -69,7 +69,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
         mAccountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
-        setContentView(R.layout.act_register);
+        setContentView(R.layout.activity_sign_up);
 
         findViewById(R.id.already_member).setOnClickListener(this);
         findViewById(R.id.submit).setOnClickListener(this);
