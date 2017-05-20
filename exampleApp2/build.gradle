@@ -10,10 +10,20 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'release'
+            keyPassword 'android_release'
+            storeFile rootProject.file('android.jks')
+            storePassword 'android'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
 }
