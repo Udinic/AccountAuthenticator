@@ -23,5 +23,6 @@ ext {
 
     // Application dependencies
     googleGsonLibraryVersion = '2.7'
+    guavaVersion = '20.0'
     supportLibraryVersion = '25.3.0'
 }
