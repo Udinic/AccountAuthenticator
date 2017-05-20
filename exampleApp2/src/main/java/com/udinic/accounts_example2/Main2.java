@@ -106,37 +106,6 @@ public class Main2 extends Activity {
     }
 
     /**
-     * Show all the accounts registered on the account manager. Request an auth token upon user select.
-     *
-     * @param authTokenType
-     */
-    private void showAccountPicker(final String authTokenType, final boolean invalidate) {
-        mInvalidate = invalidate;
-        final Account availableAccounts[] = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-
-        if (availableAccounts.length == 0) {
-            Toast.makeText(this, "No accounts", Toast.LENGTH_SHORT).show();
-        } else {
-            String name[] = new String[availableAccounts.length];
-            for (int i = 0; i < availableAccounts.length; i++) {
-                name[i] = availableAccounts[i].name;
-            }
-
-            // Account picker
-            mAlertDialog = new AlertDialog.Builder(this).setTitle("Pick Account").setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, name), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (invalidate)
-                        invalidateAuthToken(availableAccounts[which], authTokenType);
-                    else
-                        getExistingAccountAuthToken(availableAccounts[which], authTokenType);
-                }
-            }).create();
-            mAlertDialog.show();
-        }
-    }
-
-    /**
      * Get the auth token for an existing account on the AccountManager
      *
      * @param account
@@ -154,32 +123,6 @@ public class Main2 extends Activity {
                     final String authToken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
                     showMessage((authToken != null) ? "SUCCESS!\ntoken: " + authToken : "FAIL");
                     Log.d("udinic", "GetToken Bundle is " + bnd);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    showMessage(e.getMessage());
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * Invalidates the auth token for the account
-     *
-     * @param account
-     * @param authTokenType
-     */
-    private void invalidateAuthToken(final Account account, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null, null);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Bundle bnd = future.getResult();
-
-                    final String authToken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-                    mAccountManager.invalidateAuthToken(account.type, authToken);
-                    showMessage(account.name + " invalidated");
                 } catch (Exception e) {
                     e.printStackTrace();
                     showMessage(e.getMessage());
@@ -216,6 +159,63 @@ public class Main2 extends Activity {
                     }
                 }
                 , null);
+    }
+
+    /**
+     * Invalidates the auth token for the account
+     *
+     * @param account
+     * @param authTokenType
+     */
+    private void invalidateAuthToken(final Account account, String authTokenType) {
+        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null, null);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Bundle bnd = future.getResult();
+
+                    final String authToken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
+                    mAccountManager.invalidateAuthToken(account.type, authToken);
+                    showMessage(account.name + " invalidated");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage(e.getMessage());
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * Show all the accounts registered on the account manager. Request an auth token upon user select.
+     *
+     * @param authTokenType
+     */
+    private void showAccountPicker(final String authTokenType, final boolean invalidate) {
+        mInvalidate = invalidate;
+        final Account availableAccounts[] = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+
+        if (availableAccounts.length == 0) {
+            Toast.makeText(this, "No accounts", Toast.LENGTH_SHORT).show();
+        } else {
+            String name[] = new String[availableAccounts.length];
+            for (int i = 0; i < availableAccounts.length; i++) {
+                name[i] = availableAccounts[i].name;
+            }
+
+            // Account picker
+            mAlertDialog = new AlertDialog.Builder(this).setTitle("Pick Account").setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, name), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (invalidate)
+                        invalidateAuthToken(availableAccounts[which], authTokenType);
+                    else
+                        getExistingAccountAuthToken(availableAccounts[which], authTokenType);
+                }
+            }).create();
+            mAlertDialog.show();
+        }
     }
 
     private void showMessage(final String msg) {

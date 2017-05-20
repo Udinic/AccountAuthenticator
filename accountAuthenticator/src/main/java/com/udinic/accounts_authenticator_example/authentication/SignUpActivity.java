@@ -25,7 +25,14 @@ import static com.udinic.accounts_authenticator_example.authentication.Authentic
 public class SignUpActivity extends Activity {
 
     private String TAG = getClass().getSimpleName();
+
     private String mAccountType;
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +100,6 @@ public class SignUpActivity extends Activity {
                 }
             }
         }.execute();
-    }
-
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_CANCELED);
-        super.onBackPressed();
     }
 
 }
