@@ -20,10 +20,11 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +36,7 @@ import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName() + " #1";
 
@@ -72,6 +73,7 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         mAccountManager = AccountManager.get(this);
 
         findViewById(R.id.button_add_account).setOnClickListener(this);
