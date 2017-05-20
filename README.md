@@ -13,13 +13,14 @@ Developed By
 ============
 
 * Udi Cohen (udinic@gmail.com)
+* JP Ventura (contact@jpventura.com)
 
 
 
 License
 =======
 
-Copyright 2013 Udi Cohen
+Copyright (c) 2017 Udi Cohen
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
