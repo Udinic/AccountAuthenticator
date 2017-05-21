@@ -46,10 +46,23 @@ public class SignInTask implements Continuation<Bundle, Task<Bundle>> {
     @Override
     public Task<Bundle> then(@NonNull final Task<Bundle> task) throws Exception {
         mAuthData = checkNotNull(task.getResult());
-        return signUp().continueWithTask(getAuthToken()).continueWith(getResult());
+
+        if (mAuthData.containsKey(KEY_AUTHTOKEN)) {
+            return signInWithCustomToken(checkNotNull(mAuthData.getString(KEY_AUTHTOKEN)))
+                    .continueWithTask(getAuthToken())
+                    .continueWith(getResult());
+        }
+
+        return signInWithEmailAndPassword()
+                .continueWithTask(getAuthToken())
+                .continueWith(getResult());
     }
 
-    private Task<AuthResult> signUp() {
+    private Task<AuthResult> signInWithCustomToken(@NonNull final String customToken) {
+        return FirebaseAuth.getInstance().signInWithCustomToken(checkNotNull(customToken));
+    }
+
+    private Task<AuthResult> signInWithEmailAndPassword() {
         return FirebaseAuth.getInstance().signInWithEmailAndPassword(
                 checkNotNull(mAuthData.getString(KEY_ACCOUNT_NAME)),
                 checkNotNull(mAuthData.getString(KEY_PASSWORD))
