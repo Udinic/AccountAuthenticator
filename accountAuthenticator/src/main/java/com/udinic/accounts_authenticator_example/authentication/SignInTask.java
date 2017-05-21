@@ -32,10 +32,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SignInTask implements Continuation<Bundle, Task<Bundle>> {
 
+    private boolean mRefreshToken;
     private Bundle mAuthData;
 
+    public SignInTask() {
+        this(false);
+    }
+
+    public SignInTask(final boolean refreshToken) {
+        mRefreshToken = refreshToken;
+    }
+
     @Override
-    public Task<Bundle> then(@NonNull Task<Bundle> task) throws Exception {
+    public Task<Bundle> then(@NonNull final Task<Bundle> task) throws Exception {
         mAuthData = checkNotNull(task.getResult());
         return signUp().continueWithTask(getAuthToken()).continueWith(getResult());
     }
@@ -50,8 +59,8 @@ public class SignInTask implements Continuation<Bundle, Task<Bundle>> {
     private Continuation<AuthResult, Task<GetTokenResult>> getAuthToken() {
         return new Continuation<AuthResult, Task<GetTokenResult>>() {
             @Override
-            public Task<GetTokenResult> then(@NonNull Task<AuthResult> task) throws Exception {
-                return task.getResult().getUser().getToken(true);
+            public Task<GetTokenResult> then(@NonNull final Task<AuthResult> task) throws Exception {
+                return task.getResult().getUser().getToken(mRefreshToken);
             }
         };
     }
@@ -59,7 +68,7 @@ public class SignInTask implements Continuation<Bundle, Task<Bundle>> {
     private Continuation<GetTokenResult, Bundle> getResult() {
         return new Continuation<GetTokenResult, Bundle> () {
             @Override
-            public Bundle then(@NonNull Task<GetTokenResult> task) throws Exception {
+            public Bundle then(@NonNull final Task<GetTokenResult> task) throws Exception {
                 mAuthData.putString(KEY_AUTHTOKEN, task.getResult().getToken());
                 return mAuthData;
             }
