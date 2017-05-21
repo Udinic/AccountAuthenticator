@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Tasks;
 import static android.accounts.AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE;
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
+import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static android.accounts.AccountManager.KEY_PASSWORD;
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.*;
@@ -78,27 +79,23 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
         final String authToken = am.peekAuthToken(account, authTokenType);
         Bundle authData = new Bundle();
 
-        // Lets give another try to authenticate the user
-        if (TextUtils.isEmpty(authToken)) {
-            final String password = am.getPassword(account);
+        // Ensure authentication token has not expired
+        if (!TextUtils.isEmpty(authToken)) {
+            authData.putString(KEY_ACCOUNT_NAME, account.name);
+            authData.putString(KEY_ACCOUNT_TYPE, account.type);
+            authData.putString(KEY_AUTHTOKEN, authToken);
 
-            if (!TextUtils.isEmpty(password)) {
-                authData.putString(KEY_ACCOUNT_NAME, account.name);
-                authData.putString(KEY_ACCOUNT_TYPE, account.type);
-                authData.putString(KEY_AUTH_TOKEN_TYPE, authTokenType);
-                authData.putString(KEY_PASSWORD, password);
-                try {
-                    Log.d(LOG_TAG, "> re-authenticating with the existing password");
-                    authData = Tasks.await(Tasks.forResult(authData).continueWithTask(new SignInTask()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    authData.clear();
-                }
+            try {
+                Log.d(LOG_TAG, "> re-authenticating with the peeked token");
+                authData = Tasks.await(Tasks.forResult(authData).continueWithTask(new SignInTask(true)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                authData.clear();
             }
         }
 
         // If we get an authToken - we return it
-        if (authData.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+        if (authData.containsKey(KEY_AUTHTOKEN)) {
             return authData;
         }
 

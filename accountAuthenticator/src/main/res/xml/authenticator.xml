@@ -17,6 +17,7 @@
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
     android:accountPreferences="@xml/prefs"
     android:accountType="com.udinic.auth_example"
+    android:customTokens="false"
     android:icon="@drawable/ic_udinic"
     android:label="@string/label"
     android:smallIcon="@drawable/ic_udinic" />
