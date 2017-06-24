@@ -23,8 +23,9 @@ ext {
     targetSdkVersion = 25
 
     // Application dependencies
+    firebaseLibraryVersion = '11.0.1'
     googleGsonLibraryVersion = '2.7'
-    googlePlayLibraryVersion = '11.0.1'
+    googlePlayLibraryVersion = rootProject.firebaseLibraryVersion
     guavaVersion = '20.0'
     supportLibraryVersion = '25.3.0'
 }
