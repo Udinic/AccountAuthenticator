@@ -1,7 +1,10 @@
 package com.udinic.accounts_authenticator_example.authentication;
 
+import android.net.Uri;
 import android.util.Log;
+
 import com.google.gson.Gson;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -11,48 +14,65 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Handles the comminication with Parse.com
- *
+ * <p>
  * User: udinic
  * Date: 3/27/13
  * Time: 3:30 AM
  */
-public class ParseComServerAuthenticate implements ServerAuthenticate{
+public class ParseComServerAuthenticate implements ServerAuthenticate {
     @Override
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
 
-        String url = "https://api.parse.com/1/users";
+        //https://api.parse.com/1/users
+        URL url=new URL("https://applicationauthenticator.herokuapp.com/parse/users");
+        HttpURLConnection httpClient = (HttpURLConnection) url.openConnection();
 
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("X-Parse-Application-Id","XUafJTkPikD5XN5HxciweVuSe12gDgk2tzMltOhr");
-        httpPost.addHeader("X-Parse-REST-API-Key", "8L9yTQ3M86O4iiucwWb4JS7HkxoSKo7ssJqGChWx");
-        httpPost.addHeader("Content-Type", "application/json");
-
-        String user = "{\"username\":\"" + email + "\",\"password\":\"" + pass + "\",\"phone\":\"415-392-0202\"}";
-        HttpEntity entity = new StringEntity(user);
-        httpPost.setEntity(entity);
-
+        httpClient.addRequestProperty("X-Parse-Application-Id", "myAppId");
+        httpClient.addRequestProperty("X-Parse-REST-API-Key", "myMasterKey");
+        httpClient.addRequestProperty("Content-Type", "application/json");
+        httpClient.setRequestMethod("POST");
+        JSONObject params=new JSONObject();
+        params.put("username",email);
+        params.put("password",pass);
+        params.put("phone","999-999-9999");
+        OutputStreamWriter wr = new OutputStreamWriter(httpClient.getOutputStream());
+        wr.write(params.toString());
+        wr.flush();
         String authtoken = null;
         try {
-            HttpResponse response = httpClient.execute(httpPost);
-            String responseString = EntityUtils.toString(response.getEntity());
+            String responseString = httpClient.getResponseMessage();
 
-            if (response.getStatusLine().getStatusCode() != 201) {
+            if (httpClient.getResponseCode() != 201) {
                 ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
-                throw new Exception("Error creating user["+error.code+"] - " + error.error);
+                throw new Exception(responseString);
             }
 
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(httpClient.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-            User createdUser = new Gson().fromJson(responseString, User.class);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            User createdUser = new Gson().fromJson(response.toString(), User.class);
 
             authtoken = createdUser.sessionToken;
 
@@ -68,40 +88,59 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
 
         Log.d("udini", "userSignIn");
 
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        String url = "https://api.parse.com/1/login";
-
-
+        //https://api.parse.com/1/
+        String tUrl="https://applicationauthenticator.herokuapp.com/parse/login";
         String query = null;
         try {
             query = String.format("%s=%s&%s=%s", "username", URLEncoder.encode(user, "UTF-8"), "password", pass);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        url += "?" + query;
+        tUrl += "?" + query;
 
-        HttpGet httpGet = new HttpGet(url);
+        URL url = new URL(tUrl);
 
-        httpGet.addHeader("X-Parse-Application-Id", "XUafJTkPikD5XN5HxciweVuSe12gDgk2tzMltOhr");
-        httpGet.addHeader("X-Parse-REST-API-Key", "8L9yTQ3M86O4iiucwWb4JS7HkxoSKo7ssJqGChWx");
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("GET");
 
-        HttpParams params = new BasicHttpParams();
-        params.setParameter("username", user);
-        params.setParameter("password", pass);
-        httpGet.setParams(params);
+        httpURLConnection.setRequestProperty("X-Parse-Application-Id", "myAppId");
+        httpURLConnection.setRequestProperty("X-Parse-REST-API-Key", "myMasterKey");
+
+
+//        Map<String,Object> params = new LinkedHashMap<>();
+//        params.put("username", user);
+//        params.put("password", pass);
+//        StringBuilder postData = new StringBuilder();
+//        for (Map.Entry<String,Object> param : params.entrySet()) {
+//            if (postData.length() != 0) postData.append('&');
+//            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+//            postData.append('=');
+//            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+//        }
+//        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+//        httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//        httpURLConnection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+//        httpURLConnection.getOutputStream().write(postDataBytes);
 //        httpGet.getParams().setParameter("username", user).setParameter("password", pass);
 
         String authtoken = null;
         try {
-            HttpResponse response = httpClient.execute(httpGet);
 
-            String responseString = EntityUtils.toString(response.getEntity());
-            if (response.getStatusLine().getStatusCode() != 200) {
-                ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
-                throw new Exception("Error signing-in ["+error.code+"] - " + error.error);
+            String responseString = httpURLConnection.getResponseMessage();
+            if (httpURLConnection.getResponseCode() != 200) {
+                //ParseComError error = new Gson().fromJson(httpURLConnection.getResponseMessage(), ParseComError.class);
+                throw new Exception(responseString);
             }
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(httpURLConnection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-            User loggedUser = new Gson().fromJson(responseString, User.class);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            User loggedUser = new Gson().fromJson(response.toString(), User.class);
             authtoken = loggedUser.sessionToken;
 
         } catch (IOException e) {
@@ -116,6 +155,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         int code;
         String error;
     }
+
     private class User implements Serializable {
 
         private String firstName;
