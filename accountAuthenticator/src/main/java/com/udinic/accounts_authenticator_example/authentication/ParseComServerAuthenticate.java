@@ -5,15 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,8 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
-import java.util.Map;
+
 
 /**
  * Handles the comminication with Parse.com
@@ -40,17 +31,17 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
 
         //https://api.parse.com/1/users
-        URL url=new URL("https://applicationauthenticator.herokuapp.com/parse/users");
+        URL url = new URL(Config.URL + "/parse/users");
         HttpURLConnection httpClient = (HttpURLConnection) url.openConnection();
 
-        httpClient.addRequestProperty("X-Parse-Application-Id", "myAppId");
-        httpClient.addRequestProperty("X-Parse-REST-API-Key", "myMasterKey");
+        httpClient.addRequestProperty("X-Parse-Application-Id", Config.APP_ID);
+        httpClient.addRequestProperty("X-Parse-REST-API-Key", Config.APP_KEY);
         httpClient.addRequestProperty("Content-Type", "application/json");
         httpClient.setRequestMethod("POST");
-        JSONObject params=new JSONObject();
-        params.put("username",email);
-        params.put("password",pass);
-        params.put("phone","999-999-9999");
+        JSONObject params = new JSONObject();
+        params.put("username", email);
+        params.put("password", pass);
+        params.put("phone", "999-999-9999");
         OutputStreamWriter wr = new OutputStreamWriter(httpClient.getOutputStream());
         wr.write(params.toString());
         wr.flush();
@@ -89,7 +80,8 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
         Log.d("udini", "userSignIn");
 
         //https://api.parse.com/1/
-        String tUrl="https://applicationauthenticator.herokuapp.com/parse/login";
+        String tUrl = Config.URL + "/parse/login";
+
         String query = null;
         try {
             query = String.format("%s=%s&%s=%s", "username", URLEncoder.encode(user, "UTF-8"), "password", pass);
@@ -103,30 +95,15 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
 
-        httpURLConnection.setRequestProperty("X-Parse-Application-Id", "myAppId");
-        httpURLConnection.setRequestProperty("X-Parse-REST-API-Key", "myMasterKey");
+        httpURLConnection.setRequestProperty("X-Parse-Application-Id", Config.APP_ID);
+        httpURLConnection.setRequestProperty("X-Parse-REST-API-Key", Config.APP_KEY);
 
-
-//        Map<String,Object> params = new LinkedHashMap<>();
-//        params.put("username", user);
-//        params.put("password", pass);
-//        StringBuilder postData = new StringBuilder();
-//        for (Map.Entry<String,Object> param : params.entrySet()) {
-//            if (postData.length() != 0) postData.append('&');
-//            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-//            postData.append('=');
-//            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-//        }
-//        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-//        httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-//        httpURLConnection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-//        httpURLConnection.getOutputStream().write(postDataBytes);
-//        httpGet.getParams().setParameter("username", user).setParameter("password", pass);
 
         String authtoken = null;
         try {
 
             String responseString = httpURLConnection.getResponseMessage();
+            Log.d("here", responseString);
             if (httpURLConnection.getResponseCode() != 200) {
                 //ParseComError error = new Gson().fromJson(httpURLConnection.getResponseMessage(), ParseComError.class);
                 throw new Exception(responseString);

@@ -10,15 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.udinic.accounts_authenticator_example.R;
+
+import java.nio.charset.StandardCharsets;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.sServerAuthenticate;
 
 /**
  * The Authenticator activity.
- *
+ * <p>
  * Called by the Authenticator and in charge of identifing the user.
- *
+ * <p>
  * It sends back to the Authenticator the result.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
@@ -36,6 +39,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    AdvancedEncryptionStandard advancedEncryptionStandard;
     private AccountManager mAccountManager;
     private String mAuthTokenType;
 
@@ -45,6 +49,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        advancedEncryptionStandard = new AdvancedEncryptionStandard("Bar12345Bar12345", "RandomInitVector");
         setContentView(R.layout.act_login);
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -54,7 +59,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
         if (accountName != null) {
-            ((TextView)findViewById(R.id.accountName)).setText(accountName);
+            ((TextView) findViewById(R.id.accountName)).setText(accountName);
         }
 
         findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
@@ -130,29 +135,34 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void finishLogin(Intent intent) {
-        Log.d("udinic", TAG + "> finishLogin");
+        try {
+            Log.d("udinic", TAG + "> finishLogin");
 
-        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+            String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+            final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
-        if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d("udinic", TAG + "> finishLogin > addAccountExplicitly");
-            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-            String authtokenType = mAuthTokenType;
+            if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+                Log.d("udinic", TAG + "> finishLogin > addAccountExplicitly" + accountPassword);
+                String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                String authtokenType = mAuthTokenType;
 
-            // Creating the account on the device and setting the auth token we got
-            // (Not setting the auth token will cause another call to the server to authenticate the user)
-            mAccountManager.addAccountExplicitly(account, accountPassword, null);
-            mAccountManager.setAuthToken(account, authtokenType, authtoken);
-        } else {
-            Log.d("udinic", TAG + "> finishLogin > setPassword");
-            mAccountManager.setPassword(account, accountPassword);
+                Log.d("udinic", TAG + " auth token" + authtoken + " & encrypted auth tokens");
+                // Creating the account on the device and setting the auth token we got
+                // (Not setting the auth token will cause another call to the server to authenticate the user)
+                mAccountManager.addAccountExplicitly(account, accountPassword, null);
+                mAccountManager.setAuthToken(account, authtokenType, advancedEncryptionStandard.encrypt(authtoken));
+            } else {
+                Log.d("udinic", TAG + "> finishLogin > setPassword>" + accountPassword);
+                mAccountManager.setPassword(account, accountPassword);
+            }
+
+            setAccountAuthenticatorResult(intent.getExtras());
+            setResult(RESULT_OK, intent);
+            finish();
+        } catch (Exception e) {
+            //
         }
-
-        setAccountAuthenticatorResult(intent.getExtras());
-        setResult(RESULT_OK, intent);
-        finish();
     }
 
 }

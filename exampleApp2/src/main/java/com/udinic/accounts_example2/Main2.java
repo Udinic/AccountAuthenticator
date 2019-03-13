@@ -1,6 +1,7 @@
 package com.udinic.accounts_example2;
 
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -24,9 +25,9 @@ import com.udinic.accounts_authenticator_example.authentication.AccountGeneral;
  * Time: 13:50
  */
 public class Main2 extends Activity {
-	
-	private static final String STATE_DIALOG = "state_dialog";
-	private static final String STATE_INVALIDATE = "state_invalidate";
+
+    private static final String STATE_DIALOG = "state_dialog";
+    private static final String STATE_INVALIDATE = "state_invalidate";
 
     private String TAG = this.getClass().getSimpleName();
     private AccountManager mAccountManager;
@@ -66,28 +67,29 @@ public class Main2 extends Activity {
                 showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, true);
             }
         });
-        
+
         if (savedInstanceState != null) {
-        	boolean showDialog = savedInstanceState.getBoolean(STATE_DIALOG);
-        	boolean invalidate = savedInstanceState.getBoolean(STATE_INVALIDATE);
-        	if (showDialog) {
-        		showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
-        	}
+            boolean showDialog = savedInstanceState.getBoolean(STATE_DIALOG);
+            boolean invalidate = savedInstanceState.getBoolean(STATE_INVALIDATE);
+            if (showDialog) {
+                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
+            }
         }
 
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-    	super.onSaveInstanceState(outState);
-    	if (mAlertDialog != null && mAlertDialog.isShowing()) {
-    		outState.putBoolean(STATE_DIALOG, true);
-    		outState.putBoolean(STATE_INVALIDATE, mInvalidate);
-    	}
+        super.onSaveInstanceState(outState);
+        if (mAlertDialog != null && mAlertDialog.isShowing()) {
+            outState.putBoolean(STATE_DIALOG, true);
+            outState.putBoolean(STATE_INVALIDATE, mInvalidate);
+        }
     }
 
     /**
      * Add new account to the account manager
+     *
      * @param accountType
      * @param authTokenType
      */
@@ -110,10 +112,11 @@ public class Main2 extends Activity {
 
     /**
      * Show all the accounts registered on the account manager. Request an auth token upon user select.
+     *
      * @param authTokenType
      */
     private void showAccountPicker(final String authTokenType, final boolean invalidate) {
-    	mInvalidate = invalidate;
+        mInvalidate = invalidate;
         final Account availableAccounts[] = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
         if (availableAccounts.length == 0) {
@@ -128,7 +131,7 @@ public class Main2 extends Activity {
             mAlertDialog = new AlertDialog.Builder(this).setTitle("Pick Account").setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, name), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(invalidate)
+                    if (invalidate)
                         invalidateAuthToken(availableAccounts[which], authTokenType);
                     else
                         getExistingAccountAuthToken(availableAccounts[which], authTokenType);
@@ -140,6 +143,7 @@ public class Main2 extends Activity {
 
     /**
      * Get the auth token for an existing account on the AccountManager
+     *
      * @param account
      * @param authTokenType
      */
@@ -165,11 +169,12 @@ public class Main2 extends Activity {
 
     /**
      * Invalidates the auth token for the account
+     *
      * @param account
      * @param authTokenType
      */
     private void invalidateAuthToken(final Account account, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null,null);
+        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null, null);
 
         new Thread(new Runnable() {
             @Override
@@ -193,6 +198,7 @@ public class Main2 extends Activity {
      * If not exist - add it and then return its auth token.
      * If one exist - return its auth token.
      * If more than one exists - show a picker and return the select account's auth token.
+     *
      * @param accountType
      * @param authTokenType
      */
@@ -218,7 +224,7 @@ public class Main2 extends Activity {
     }
 
     private void showMessage(final String msg) {
-    	if (TextUtils.isEmpty(msg))
+        if (TextUtils.isEmpty(msg))
             return;
 
         runOnUiThread(new Runnable() {

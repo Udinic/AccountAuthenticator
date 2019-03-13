@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "com.udinic.accounts_example2"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 28
     }
 
