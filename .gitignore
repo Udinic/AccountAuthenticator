@@ -3,7 +3,7 @@ gen/
 out/
 build/
 .idea/workspace.xml
-
+parse/
 *.iws
 *.iml
 *.ipr

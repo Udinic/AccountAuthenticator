@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.nio.charset.StandardCharsets;
+
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static com.udinic.accounts_authenticator_example.authentication.AccountGeneral.*;
 
@@ -20,12 +22,15 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
     private String TAG = "UdinicAuthenticator";
     private final Context mContext;
+    AdvancedEncryptionStandard advancedEncryptionStandard;
+    private AccountManager mAccountManager;
 
     public UdinicAuthenticator(Context context) {
         super(context);
-
+        advancedEncryptionStandard = new AdvancedEncryptionStandard("Bar12345Bar12345", "RandomInitVector");
         // I hate you! Google - set mContext as protected!
         this.mContext = context;
+        mAccountManager = AccountManager.get(context);
     }
 
     @Override
@@ -48,55 +53,66 @@ public class UdinicAuthenticator extends AbstractAccountAuthenticator {
 
         Log.d("udinic", TAG + "> getAuthToken");
 
-        // If the caller requested an authToken type we don't support, then
-        // return an error
-        if (!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+        try {
+            // If the caller requested an authToken type we don't support, then
+            // return an error
+            if (!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+                final Bundle result = new Bundle();
+                result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
+                return result;
+            }
+
+            // Extract the username and password from the Account Manager, and ask
+            // the server for an appropriate AuthToken.
+            final AccountManager am = AccountManager.get(mContext);
+            Log.d("udinic", TAG + "> peekAuthToken returned - ");
+
+            String authToken = am.peekAuthToken(account, authTokenType);
+
+
+            // Lets give another try to authenticate the user
+            if (authToken == null || TextUtils.isEmpty(authToken)) {
+                final String password = am.getPassword(account);
+                if (password != null) {
+                    try {
+
+                        authToken = advancedEncryptionStandard.encrypt(sServerAuthenticate.userSignIn(account.name, password, authTokenType));
+                        mAccountManager.setAuthToken(account, authTokenType, authToken);
+
+                        //final Bundle result = new Bundle();
+                        Log.d("udinic", TAG + "> re-authenticating with the existing password" + authToken);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            // If we get an authToken - we return it
+            if (!TextUtils.isEmpty(authToken)) {
+                final Bundle result = new Bundle();
+                result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+                result.putString(AccountManager.KEY_AUTHTOKEN, advancedEncryptionStandard.decrypt(authToken));
+                return result;
+            }
+
+            // If we get here, then we couldn't access the user's password - so we
+            // need to re-prompt them for their credentials. We do that by creating
+            // an intent to display our AuthenticatorActivity.
+            final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+            intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+            intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, account.type);
+            intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
+            intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.name);
+            final Bundle bundle = new Bundle();
+            bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+            return bundle;
+        } catch (Exception e) {
+            e.printStackTrace();
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
             return result;
         }
-
-        // Extract the username and password from the Account Manager, and ask
-        // the server for an appropriate AuthToken.
-        final AccountManager am = AccountManager.get(mContext);
-
-        String authToken = am.peekAuthToken(account, authTokenType);
-
-        Log.d("udinic", TAG + "> peekAuthToken returned - " + authToken);
-
-        // Lets give another try to authenticate the user
-        if (TextUtils.isEmpty(authToken)) {
-            final String password = am.getPassword(account);
-            if (password != null) {
-                try {
-                    Log.d("udinic", TAG + "> re-authenticating with the existing password");
-                    authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        // If we get an authToken - we return it
-        if (!TextUtils.isEmpty(authToken)) {
-            final Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-            return result;
-        }
-
-        // If we get here, then we couldn't access the user's password - so we
-        // need to re-prompt them for their credentials. We do that by creating
-        // an intent to display our AuthenticatorActivity.
-        final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, account.type);
-        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.name);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        return bundle;
     }
 
 

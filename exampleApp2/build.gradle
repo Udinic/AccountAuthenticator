@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.udinic.accounts_example2"
-        minSdkVersion 8
-        targetSdkVersion 23
+        minSdkVersion 26
+        targetSdkVersion 28
     }
 
     buildTypes {
@@ -19,5 +18,5 @@ android {
 }
 
 dependencies {
-    compile project(':accountAuthenticator')
+    api project(':accountAuthenticator')
 }
